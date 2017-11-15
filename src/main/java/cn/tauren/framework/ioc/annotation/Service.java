@@ -2,7 +2,7 @@
  * 深圳金融电子结算中心
  * Copyright (c) 1995-2017 All Rights Reserved.
  */
-package com.tauren.framework.annotation;
+package cn.tauren.framework.ioc.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
