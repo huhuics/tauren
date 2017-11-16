@@ -19,11 +19,11 @@ import cn.tauren.framework.ioc.ClassScanner;
  */
 public class ClassScannerTest {
 
-    private ClassScanner scanner = new ClassScanner();
+    private ClassScanner scanner = new ClassScanner("cn.tauren.framework.test");
 
     @Test
     public void testGetClasses() {
-        List<Class<?>> classes = scanner.getClasses("cn.tauren.framework.test");
+        List<Class<?>> classes = scanner.getClasses();
         Assert.assertTrue(CollectionUtils.isNotEmpty(classes));
     }
 

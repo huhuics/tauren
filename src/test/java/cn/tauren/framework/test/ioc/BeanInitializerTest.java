@@ -10,7 +10,8 @@ import org.apache.commons.collections4.MapUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.tauren.framework.ioc.BeanInitializer;
+import cn.tauren.framework.ioc.BeanContainer;
+import cn.tauren.framework.ioc.ClassScanner;
 
 /**
  * 
@@ -19,12 +20,12 @@ import cn.tauren.framework.ioc.BeanInitializer;
  */
 public class BeanInitializerTest {
 
-    private BeanInitializer initializer = new BeanInitializer("cn.tauren.framework.test");
+    private BeanContainer initializer = new BeanContainer(new ClassScanner("cn.tauren.framework.test"));
 
     @Test
     public void testInitBean() {
         initializer.initBean();
-        Map<String, Object> classMap = initializer.getClassMap();
+        Map<String, Object> classMap = initializer.getNameContainer();
         Assert.assertTrue(MapUtils.isNotEmpty(classMap));
         System.out.println(classMap);
     }

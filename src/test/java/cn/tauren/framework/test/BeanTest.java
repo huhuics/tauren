@@ -11,7 +11,7 @@ import cn.tauren.framework.ioc.annotation.Bean;
  * @author HuHui
  * @version $Id: BeanTest.java, v 0.1 2017年11月16日 下午12:36:21 HuHui Exp $
  */
-@Bean("myBeanTest")
+@Bean
 public class BeanTest {
 
     public BeanTest() {

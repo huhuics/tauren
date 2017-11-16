@@ -35,12 +35,17 @@ public final class ClassScanner {
 
     private List<Class<?>>      classes       = new ArrayList<Class<?>>();
 
+    private final String        pkgName;
+
+    public ClassScanner(String pkgName) {
+        this.pkgName = pkgName;
+    }
+
     /**
      * 返回包名路径下所有的类
-     * @param pkgName  包名
      * @return         类集合
      */
-    public synchronized List<Class<?>> getClasses(String pkgName) {
+    public synchronized List<Class<?>> getClasses() {
         AssertUtil.assertNotBlank(pkgName, "包路径不能为空");
         if (CollectionUtils.isNotEmpty(classes)) {
             return classes;

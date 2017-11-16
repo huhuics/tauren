@@ -11,12 +11,12 @@ import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import cn.tauren.framework.Constants;
 import cn.tauren.framework.ioc.annotation.Bean;
 import cn.tauren.framework.util.AssertUtil;
+import cn.tauren.framework.util.ClassUtil;
 
 /**
- * Bean初始化程序
+ * Bean容器
  * <ul>
  *  <li>扫描指定目录下的所有Bean</li>
  *  <li>将带有{@link Bean}注解的类初始化</li>
@@ -28,46 +28,52 @@ import cn.tauren.framework.util.AssertUtil;
  *  <li>构造方法是私有的</li>
  * </ul>
  * @author HuHui
- * @version $Id: BeanInitializer.java, v 0.1 2017年11月16日 上午10:56:56 HuHui Exp $
+ * @version $Id: BeanContainer.java, v 0.1 2017年11月16日 上午10:56:56 HuHui Exp $
  */
-public class BeanInitializer {
-
-    /** 扫描路径 */
-    private final String              pkgName;
+public class BeanContainer {
 
     /**
-     * 存放类的实例的Map
-     * key为类的full name
+     * 存放类的实例的Map,即用于存储Bean的容器
+     * key为类的name
      * value为实例对象
      */
-    private final Map<String, Object> classMap;
+    private final Map<String, Object>   nameContainer;
 
-    private final ClassScanner        scanner;
+    /**
+     * 存放类的实例Map
+     * key为类的类型
+     * value为类实例对象
+     */
+    private final Map<Class<?>, Object> typeContainer;
 
-    public BeanInitializer(String pkgName) {
-        this.pkgName = pkgName;
-        classMap = new HashMap<String, Object>();
-        scanner = new ClassScanner();
+    /** 类扫描器 */
+    private final ClassScanner          scanner;
+
+    public BeanContainer(ClassScanner scanner) {
+        nameContainer = new HashMap<String, Object>();
+        typeContainer = new HashMap<Class<?>, Object>();
+        this.scanner = scanner;
     }
 
     public void initBean() {
-        List<Class<?>> classes = scanner.getClasses(pkgName);
+        List<Class<?>> classes = scanner.getClasses();
         if (CollectionUtils.isNotEmpty(classes)) {
             for (Class<?> clazz : classes) {
                 if (clazz.isAnnotationPresent(Bean.class)) {
                     Bean beanAnno = clazz.getAnnotation(Bean.class);
-                    String beanFullName = clazz.getName();
+                    String beanName = ClassUtil.humpNaming(clazz.getSimpleName());
 
                     //如果指定了bean的name则修改默认名称
                     if (StringUtils.isNotBlank(beanAnno.value())) {
-                        int index = beanFullName.lastIndexOf(Constants.FILE_DOT);
-                        beanFullName = beanFullName.substring(0, index) + Constants.FILE_DOT + beanAnno.value();
+                        beanName = beanAnno.value();
                     }
 
-                    AssertUtil.assertTrue(!classMap.containsKey(beanFullName), "类名重复");
+                    AssertUtil.assertTrue(!nameContainer.containsKey(beanName), "类名重复");
 
                     try {
-                        classMap.put(beanFullName, clazz.newInstance());
+                        Object instance = clazz.newInstance();
+                        nameContainer.put(beanName, instance);
+                        typeContainer.put(clazz.getClass(), instance);
                     } catch (Exception e) {
                         throw new RuntimeException("初始化类失败", e);
                     }
@@ -77,8 +83,8 @@ public class BeanInitializer {
         }
     }
 
-    public Map<String, Object> getClassMap() {
-        return classMap;
+    public Map<String, Object> getNameContainer() {
+        return nameContainer;
     }
 
 }
