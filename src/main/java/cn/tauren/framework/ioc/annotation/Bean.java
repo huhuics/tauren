@@ -11,14 +11,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 被@Service修饰的类表明将会被IoC容器接管
+ * 被@Bean修饰的类表明将会被IoC容器接管
  * @author HuHui
- * @version $Id: Service.java, v 0.1 2017年11月14日 下午7:35:41 HuHui Exp $
+ * @version $Id: Bean.java, v 0.1 2017年11月14日 下午7:35:41 HuHui Exp $
  */
 @Documented
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Service {
+public @interface Bean {
 
     /**
      * <p>被注解修饰的类的名字</p>
