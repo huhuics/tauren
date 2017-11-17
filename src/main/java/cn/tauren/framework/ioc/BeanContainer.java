@@ -37,54 +37,42 @@ public class BeanContainer {
      * key为类的name
      * value为实例对象
      */
-    private final Map<String, Object>   nameContainer;
-
-    /**
-     * 存放类的实例Map
-     * key为类的类型
-     * value为类实例对象
-     */
-    private final Map<Class<?>, Object> typeContainer;
+    private final Map<String, Object> container;
 
     /** 类扫描器 */
-    private final ClassScanner          scanner;
+    private final ClassScanner        scanner;
 
     public BeanContainer(ClassScanner scanner) {
-        nameContainer = new HashMap<String, Object>();
-        typeContainer = new HashMap<Class<?>, Object>();
+        container = new HashMap<String, Object>();
         this.scanner = scanner;
     }
 
-    public void initBean() {
-        List<Class<?>> classes = scanner.getClasses();
+    public void initContainer() {
+        List<Class<?>> classes = scanner.getClassesByAnnotation(Bean.class);
         if (CollectionUtils.isNotEmpty(classes)) {
             for (Class<?> clazz : classes) {
-                if (clazz.isAnnotationPresent(Bean.class)) {
-                    Bean beanAnno = clazz.getAnnotation(Bean.class);
-                    String beanName = ClassUtil.humpNaming(clazz.getSimpleName());
+                Bean beanAnno = clazz.getAnnotation(Bean.class);
+                String beanName = ClassUtil.humpNaming(clazz.getSimpleName());
 
-                    //如果指定了bean的name则修改默认名称
-                    if (StringUtils.isNotBlank(beanAnno.value())) {
-                        beanName = beanAnno.value();
-                    }
+                //如果指定了bean的name则修改默认名称
+                if (StringUtils.isNotBlank(beanAnno.value())) {
+                    beanName = beanAnno.value();
+                }
 
-                    AssertUtil.assertTrue(!nameContainer.containsKey(beanName), "类名重复");
+                AssertUtil.assertTrue(!container.containsKey(beanName), "类名重复");
 
-                    try {
-                        Object instance = clazz.newInstance();
-                        nameContainer.put(beanName, instance);
-                        typeContainer.put(clazz.getClass(), instance);
-                    } catch (Exception e) {
-                        throw new RuntimeException("初始化类失败", e);
-                    }
-
+                try {
+                    Object instance = clazz.newInstance();
+                    container.put(beanName, instance);
+                } catch (Exception e) {
+                    throw new RuntimeException("初始化类失败", e);
                 }
             }
         }
     }
 
     public Map<String, Object> getNameContainer() {
-        return nameContainer;
+        return container;
     }
 
 }

@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import cn.tauren.framework.ioc.annotation.Bean;
 import cn.tauren.framework.ioc.annotation.Inject;
+import cn.tauren.framework.util.AssertUtil;
 
 /**
  * Bean的注入器
@@ -28,9 +30,12 @@ public class BeanInjector {
 
     private final Map<String, Object> objMap;
 
-    public BeanInjector(Map<String, Object> objMap) {
+    private final ClassScanner        scanner;
+
+    public BeanInjector(Map<String, Object> objMap, ClassScanner scanner) {
         this.objs = new ArrayList<Object>(objMap.values());
         this.objMap = objMap;
+        this.scanner = scanner;
     }
 
     public void inject() {
@@ -67,6 +72,7 @@ public class BeanInjector {
     }
 
     private Object getInjectedObject(String classSimpleName, Field field) {
+
         //1.按名称注入
         String className = getClassName(classSimpleName, field.getAnnotation(Inject.class));
         Object fieldVal = objMap.get(className);
@@ -76,6 +82,11 @@ public class BeanInjector {
 
         //2.按类型注入
         Class<?> type = field.getType();
+        List<Class<?>> classesBySuper = scanner.getClassesBySuper(type);
+        if (CollectionUtils.isNotEmpty(classesBySuper)) {
+            AssertUtil.assertTrue(classesBySuper.size() <= 1, "该接口有多个实现类,请使用名称注入方式");
+            return classesBySuper.get(0);
+        }
 
         return null;
 

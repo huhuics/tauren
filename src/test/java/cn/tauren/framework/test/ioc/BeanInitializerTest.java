@@ -11,7 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.tauren.framework.ioc.BeanContainer;
-import cn.tauren.framework.ioc.ClassScanner;
+import cn.tauren.framework.ioc.ClassScannerImpl;
 
 /**
  * 
@@ -20,11 +20,11 @@ import cn.tauren.framework.ioc.ClassScanner;
  */
 public class BeanInitializerTest {
 
-    private BeanContainer initializer = new BeanContainer(new ClassScanner("cn.tauren.framework.test"));
+    private BeanContainer initializer = new BeanContainer(new ClassScannerImpl("cn.tauren.framework.test"));
 
     @Test
     public void testInitBean() {
-        initializer.initBean();
+        initializer.initContainer();
         Map<String, Object> classMap = initializer.getNameContainer();
         Assert.assertTrue(MapUtils.isNotEmpty(classMap));
         System.out.println(classMap);

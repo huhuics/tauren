@@ -8,6 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import cn.tauren.framework.test.BeanParaTest;
+import cn.tauren.framework.test.BeanTest;
 import cn.tauren.framework.util.ClassUtil;
 
 /**
@@ -31,6 +33,12 @@ public class ClassUtilTest {
         String ret3 = ClassUtil.humpNaming(str3);
         Assert.assertTrue(StringUtils.equals(ret3, "b"));
 
+    }
+
+    @Test
+    public void testAssign() {
+        boolean ret = BeanParaTest.class.isAssignableFrom(BeanTest.class);
+        System.out.println(ret);
     }
 
 }

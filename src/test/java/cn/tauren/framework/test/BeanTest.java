@@ -12,7 +12,7 @@ import cn.tauren.framework.ioc.annotation.Bean;
  * @version $Id: BeanTest.java, v 0.1 2017年11月16日 下午12:36:21 HuHui Exp $
  */
 @Bean
-public class BeanTest {
+public class BeanTest implements BeanParaTest {
 
     public BeanTest() {
         System.out.println("BeanTest的构造方法");

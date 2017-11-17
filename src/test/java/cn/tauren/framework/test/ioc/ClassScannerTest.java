@@ -10,7 +10,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.tauren.framework.ioc.ClassScanner;
+import cn.tauren.framework.ioc.ClassScannerImpl;
 
 /**
  * 
@@ -19,7 +19,7 @@ import cn.tauren.framework.ioc.ClassScanner;
  */
 public class ClassScannerTest {
 
-    private ClassScanner scanner = new ClassScanner("cn.tauren.framework.test");
+    private ClassScannerImpl scanner = new ClassScannerImpl("cn.tauren.framework.test");
 
     @Test
     public void testGetClasses() {
