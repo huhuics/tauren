@@ -45,6 +45,7 @@ public class BeanContainer {
     public BeanContainer(ClassScanner scanner) {
         container = new HashMap<String, Object>();
         this.scanner = scanner;
+        initContainer();
     }
 
     public void initContainer() {
@@ -71,7 +72,7 @@ public class BeanContainer {
         }
     }
 
-    public Map<String, Object> getNameContainer() {
+    public Map<String, Object> getContainer() {
         return container;
     }
 

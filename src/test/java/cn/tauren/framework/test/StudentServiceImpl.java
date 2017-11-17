@@ -12,10 +12,12 @@ import cn.tauren.framework.ioc.annotation.Bean;
  * @version $Id: BeanTest.java, v 0.1 2017年11月16日 下午12:36:21 HuHui Exp $
  */
 @Bean
-public class BeanTest implements BeanParaTest {
+public class StudentServiceImpl implements StudentService {
 
-    public BeanTest() {
-        System.out.println("BeanTest的构造方法");
+    @Override
+    public String display() {
+        String str = "学生：鲁智深" + ", age：32";
+        System.out.println(str);
+        return str;
     }
-
 }

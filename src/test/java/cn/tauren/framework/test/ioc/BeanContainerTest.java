@@ -18,14 +18,14 @@ import cn.tauren.framework.ioc.ClassScannerImpl;
  * @author HuHui
  * @version $Id: BeanInitializerTest.java, v 0.1 2017年11月16日 下午12:37:23 HuHui Exp $
  */
-public class BeanInitializerTest {
+public class BeanContainerTest {
 
     private BeanContainer initializer = new BeanContainer(new ClassScannerImpl("cn.tauren.framework.test"));
 
     @Test
     public void testInitBean() {
         initializer.initContainer();
-        Map<String, Object> classMap = initializer.getNameContainer();
+        Map<String, Object> classMap = initializer.getContainer();
         Assert.assertTrue(MapUtils.isNotEmpty(classMap));
         System.out.println(classMap);
     }

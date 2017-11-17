@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import cn.tauren.framework.ioc.annotation.Bean;
 import cn.tauren.framework.ioc.annotation.Inject;
 import cn.tauren.framework.util.AssertUtil;
+import cn.tauren.framework.util.ClassUtil;
 
 /**
  * Bean的注入器
@@ -48,7 +49,7 @@ public class BeanInjector {
                 if (field.isAnnotationPresent(Inject.class)) {
                     field.setAccessible(true);
 
-                    Object fieldVal = getInjectedObject(clazz.getSimpleName(), field);
+                    Object fieldVal = getInjectedObject(field);
 
                     try {
                         field.set(obj, fieldVal);
@@ -60,21 +61,10 @@ public class BeanInjector {
         }
     }
 
-    /**
-     * 获取类的name
-     */
-    private String getClassName(String className, Inject injAnno) {
-        String name = injAnno.name();
-        if (StringUtils.isNotBlank(name)) {
-            return name;
-        }
-        return className;
-    }
-
-    private Object getInjectedObject(String classSimpleName, Field field) {
+    private Object getInjectedObject(Field field) {
 
         //1.按名称注入
-        String className = getClassName(classSimpleName, field.getAnnotation(Inject.class));
+        String className = getClassName(field.getName(), field.getAnnotation(Inject.class));
         Object fieldVal = objMap.get(className);
         if (fieldVal != null) {
             return fieldVal;
@@ -89,6 +79,17 @@ public class BeanInjector {
         }
 
         return null;
-
     }
+
+    /**
+     * 获取被注入类的name
+     */
+    private String getClassName(String fieldName, Inject injAnno) {
+        String name = injAnno.name();
+        if (StringUtils.isNotBlank(name)) {
+            fieldName = name;
+        }
+        return ClassUtil.humpNaming(fieldName);
+    }
+
 }

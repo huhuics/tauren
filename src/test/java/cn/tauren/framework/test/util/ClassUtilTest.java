@@ -8,8 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.tauren.framework.test.BeanParaTest;
-import cn.tauren.framework.test.BeanTest;
+import cn.tauren.framework.test.StudentService;
+import cn.tauren.framework.test.StudentServiceImpl;
 import cn.tauren.framework.util.ClassUtil;
 
 /**
@@ -37,7 +37,7 @@ public class ClassUtilTest {
 
     @Test
     public void testAssign() {
-        boolean ret = BeanParaTest.class.isAssignableFrom(BeanTest.class);
+        boolean ret = StudentService.class.isAssignableFrom(StudentServiceImpl.class);
         System.out.println(ret);
     }
 
