@@ -18,7 +18,7 @@ import cn.tauren.framework.util.ClassUtil;
 /**
  * Bean容器
  * <ul>
- *  <li>扫描指定目录下的所有Bean</li>
+ *  <li>扫描指定目录下的Bean</li>
  *  <li>将带有{@link Bean}注解的类初始化</li>
  *  <li>初始化完毕后放入Map中</li>
  * </ul>
@@ -37,13 +37,16 @@ public class BeanContainer {
      * key为类的name
      * value为实例对象
      */
-    private final Map<String, Object> container;
+    private final Map<String, Object>   containerByName;
+
+    private final Map<Class<?>, Object> containerByType;
 
     /** 类扫描器 */
-    private final ClassScanner        scanner;
+    private final ClassScanner          scanner;
 
     public BeanContainer(ClassScanner scanner) {
-        container = new HashMap<String, Object>();
+        containerByName = new HashMap<String, Object>();
+        containerByType = new HashMap<Class<?>, Object>();
         this.scanner = scanner;
         initContainer();
     }
@@ -60,11 +63,12 @@ public class BeanContainer {
                     beanName = beanAnno.value();
                 }
 
-                AssertUtil.assertTrue(!container.containsKey(beanName), "类名重复");
+                AssertUtil.assertTrue(!containerByName.containsKey(beanName), "类名重复");
 
                 try {
                     Object instance = clazz.newInstance();
-                    container.put(beanName, instance);
+                    containerByName.put(beanName, instance);
+                    containerByType.put(clazz, instance);
                 } catch (Exception e) {
                     throw new RuntimeException("初始化类失败", e);
                 }
@@ -72,8 +76,12 @@ public class BeanContainer {
         }
     }
 
-    public Map<String, Object> getContainer() {
-        return container;
+    public Map<String, Object> getNameContainer() {
+        return containerByName;
+    }
+
+    public Map<Class<?>, Object> getTypeContainer() {
+        return containerByType;
     }
 
 }

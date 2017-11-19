@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import cn.tauren.framework.Constants;
 import cn.tauren.framework.util.AssertUtil;
+import cn.tauren.framework.util.ClassUtil;
 
 /**
  * 类扫描器
@@ -81,6 +82,7 @@ public final class ClassScannerImpl implements ClassScanner {
 
     /**
      * 根据注解获取类
+     * @return  结果不包含接口或抽象类
      */
     @Override
     public List<Class<?>> getClassesByAnnotation(Class<? extends Annotation> anno) {
@@ -88,7 +90,7 @@ public final class ClassScannerImpl implements ClassScanner {
         List<Class<?>> classes = getClasses();
         if (CollectionUtils.isNotEmpty(classes)) {
             for (Class<?> _clazz : classes) {
-                if (_clazz.isAnnotationPresent(anno)) {
+                if (_clazz.isAnnotationPresent(anno) && !ClassUtil.isInterfaceOrAbstract(_clazz)) {
                     classesByAnno.add(_clazz);
                 }
             }
@@ -100,6 +102,7 @@ public final class ClassScannerImpl implements ClassScanner {
     /**
      * 根据接口/父类获取其对应实现类/子类
      * @param superClass
+     * @return 结果不包含接口或抽象类
      */
     @Override
     public List<Class<?>> getClassesBySuper(Class<?> superClass) {
@@ -107,7 +110,7 @@ public final class ClassScannerImpl implements ClassScanner {
         List<Class<?>> classes = getClasses();
         if (CollectionUtils.isNotEmpty(classes)) {
             for (Class<?> _clazz : classes) {
-                if (superClass.isAssignableFrom(_clazz) && !_clazz.isInterface()) {
+                if (superClass.isAssignableFrom(_clazz) && !ClassUtil.isInterfaceOrAbstract(_clazz)) {
                     classesBySuper.add(_clazz);
                 }
             }

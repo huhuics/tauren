@@ -27,15 +27,18 @@ import cn.tauren.framework.util.ClassUtil;
 public class BeanInjector {
 
     /** list中的Obj都是带有{@link Bean}注解 */
-    private final List<Object>        objs;
+    private final List<Object>          objs;
 
-    private final Map<String, Object> objMap;
+    private final Map<String, Object>   nameObjMap;
 
-    private final ClassScanner        scanner;
+    private final Map<Class<?>, Object> typeObjMap;
 
-    public BeanInjector(Map<String, Object> objMap, ClassScanner scanner) {
-        this.objs = new ArrayList<Object>(objMap.values());
-        this.objMap = objMap;
+    private final ClassScanner          scanner;
+
+    public BeanInjector(BeanContainer container, ClassScanner scanner) {
+        this.nameObjMap = container.getNameContainer();
+        this.typeObjMap = container.getTypeContainer();
+        this.objs = new ArrayList<Object>(this.nameObjMap.values());
         this.scanner = scanner;
     }
 
@@ -65,7 +68,7 @@ public class BeanInjector {
 
         //1.按名称注入
         String className = getClassName(field.getName(), field.getAnnotation(Inject.class));
-        Object fieldVal = objMap.get(className);
+        Object fieldVal = nameObjMap.get(className);
         if (fieldVal != null) {
             return fieldVal;
         }
@@ -75,7 +78,7 @@ public class BeanInjector {
         List<Class<?>> classesBySuper = scanner.getClassesBySuper(type);
         if (CollectionUtils.isNotEmpty(classesBySuper)) {
             AssertUtil.assertTrue(classesBySuper.size() <= 1, "该接口有多个实现类,请使用名称注入方式");
-            return classesBySuper.get(0);
+            return typeObjMap.get(classesBySuper.get(0));
         }
 
         return null;

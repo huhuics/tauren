@@ -4,6 +4,8 @@
  */
 package cn.tauren.framework.util;
 
+import java.lang.reflect.Modifier;
+
 /**
  * 工具类
  * @author HuHui
@@ -23,6 +25,15 @@ public final class ClassUtil {
         String remainChars = className.substring(1, className.length());
 
         return firstChar.toLowerCase() + remainChars;
+    }
+
+    /**
+     * 判断一个类是否是接口或抽象类
+     * @param clazz
+     * @return
+     */
+    public static boolean isInterfaceOrAbstract(Class<?> clazz) {
+        return clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers());
     }
 
 }

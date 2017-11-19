@@ -25,7 +25,7 @@ public class BeanContainerTest {
     @Test
     public void testInitBean() {
         initializer.initContainer();
-        Map<String, Object> classMap = initializer.getContainer();
+        Map<String, Object> classMap = initializer.getNameContainer();
         Assert.assertTrue(MapUtils.isNotEmpty(classMap));
         System.out.println(classMap);
     }

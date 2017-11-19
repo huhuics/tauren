@@ -4,6 +4,8 @@
  */
 package cn.tauren.framework.test.util;
 
+import java.lang.reflect.Modifier;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,6 +41,19 @@ public class ClassUtilTest {
     public void testAssign() {
         boolean ret = StudentService.class.isAssignableFrom(StudentServiceImpl.class);
         System.out.println(ret);
+    }
+
+    @Test
+    public void testModifier() {
+        boolean isAbs = Modifier.isAbstract(AbsClass.class.getModifiers());
+        System.out.println(isAbs);
+
+        isAbs = Modifier.isAbstract(ClassUtil.class.getModifiers());
+        System.out.println(isAbs);
+    }
+
+    abstract class AbsClass {
+
     }
 
 }
