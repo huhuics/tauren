@@ -20,6 +20,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import cn.tauren.framework.Constants;
+import cn.tauren.framework.ioc.api.ClassScanner;
 import cn.tauren.framework.util.AssertUtil;
 import cn.tauren.framework.util.ClassUtil;
 
@@ -27,9 +28,9 @@ import cn.tauren.framework.util.ClassUtil;
  * 类扫描器
  * <p>当<code>tauren</code>框架启动时,会扫描客户端包中所有的类</p>
  * @author HuHui
- * @version $Id: ClassScannerImpl.java, v 0.1 2017年11月15日 下午8:29:56 HuHui Exp $
+ * @version $Id: DefaultClassScanner.java, v 0.1 2017年11月15日 下午8:29:56 HuHui Exp $
  */
-public final class ClassScannerImpl implements ClassScanner {
+public final class DefaultClassScanner implements ClassScanner {
 
     private static final String FILE_PROTOCOL = "file";
 
@@ -41,7 +42,7 @@ public final class ClassScannerImpl implements ClassScanner {
 
     private Object              lock          = new Object();
 
-    public ClassScannerImpl(String pkgName) {
+    public DefaultClassScanner(String pkgName) {
         this.pkgName = pkgName;
     }
 

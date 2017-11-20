@@ -7,10 +7,10 @@ package cn.tauren.framework.test.ioc;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.tauren.framework.ioc.BeanContainer;
-import cn.tauren.framework.ioc.BeanInjector;
-import cn.tauren.framework.ioc.ClassScanner;
-import cn.tauren.framework.ioc.ClassScannerImpl;
+import cn.tauren.framework.ioc.DefaultBeanFactory;
+import cn.tauren.framework.ioc.DefaultBeanInjector;
+import cn.tauren.framework.ioc.DefaultClassScanner;
+import cn.tauren.framework.ioc.api.ClassScanner;
 
 /**
  * 
@@ -19,17 +19,17 @@ import cn.tauren.framework.ioc.ClassScannerImpl;
  */
 public class BeanInjectorTest {
 
-    private ClassScanner  scanner;
+    private ClassScanner        scanner;
 
-    private BeanContainer container;
+    private DefaultBeanFactory       container;
 
-    private BeanInjector  injector;
+    private DefaultBeanInjector injector;
 
     @Before
     public void init() {
-        scanner = new ClassScannerImpl("cn.tauren.framework.test");
-        container = new BeanContainer(scanner);
-        injector = new BeanInjector(container, scanner);
+        scanner = new DefaultClassScanner("cn.tauren.framework.test");
+        container = new DefaultBeanFactory(scanner);
+        injector = new DefaultBeanInjector(container, scanner);
     }
 
     @Test

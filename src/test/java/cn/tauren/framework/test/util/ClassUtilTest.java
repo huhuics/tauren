@@ -6,12 +6,13 @@ package cn.tauren.framework.test.util;
 
 import java.lang.reflect.Modifier;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import cn.tauren.framework.test.ClassroomService;
 import cn.tauren.framework.test.StudentService;
-import cn.tauren.framework.test.StudentServiceImpl;
 import cn.tauren.framework.util.ClassUtil;
 
 /**
@@ -39,8 +40,8 @@ public class ClassUtilTest {
 
     @Test
     public void testAssign() {
-        boolean ret = StudentService.class.isAssignableFrom(StudentServiceImpl.class);
-        System.out.println(ret);
+        boolean ret = StudentService.class.isAssignableFrom(StudentService.class);
+        Assert.assertTrue(ret);
     }
 
     @Test
@@ -50,6 +51,24 @@ public class ClassUtilTest {
 
         isAbs = Modifier.isAbstract(ClassUtil.class.getModifiers());
         System.out.println(isAbs);
+    }
+
+    @Test
+    public void testForname() throws Exception {
+        Class<?> clazz = ClassUtils.getClass("cn.tauren.framework.test.util.ClassUtilTest.AbClass", false);
+        Assert.assertNotNull(clazz);
+    }
+
+    @Test
+    public void testInstance() {
+        ClassroomService cs = new ClassroomService();
+        Assert.assertTrue(ClassroomService.class.isInstance(cs));
+    }
+
+    class AbClass {
+        public AbClass(int i) {
+            System.out.println("i=" + i);
+        }
     }
 
     abstract class AbsClass {
