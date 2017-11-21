@@ -1,7 +1,16 @@
 # Tauren Framework
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
-# 一.简介
+# 目录
+- [一. 简介](#一-简介)
+- [二. 约定](#二-约定)
+- [三. 实现方式](#三-实现方式)
+    - [3.1 IoC(Inversion of Control)](#31-iocinversion-of-control)
+    - [3.2 循环依赖问题](#32-循环依赖问题)
+    
+
+
+# 一. 简介
 *_Tauren framework_* 是一个轻量级**Java Web**框架，它提供了类似*Spring framework*的*IoC*和*AOP*功能。tauren具有如下特点：
 
 - 基于Servlet 3.0规范，可部署于Tomcat容器，或其它Servlet容器
@@ -9,14 +18,14 @@
 - 应用基于面向服务编程（SOA），可进行分布式部署
 - 灵活性高，易于扩展
 
-# 二.约定
+# 二. 约定
 *Tauren*没有*Spring framework*那么强大，客户端在使用tauren过程中默认满足下列条件：
 
 - 被*tauren*Ioc容器接管的类都有无参的构造方法且构造方法不是*私有*的
 
 - *@Bean*只应用于类，应用于接口或抽象类将无效
 
-# 三.实现方式
+# 三. 实现方式
 ## 3.1 IoC(Inversion of Control)
 ![](https://github.com/huhuics/Accumulate/blob/master/image/Tauren-IoC.jpg?raw=true)
 
@@ -37,12 +46,10 @@ IoC实现的类图如上图所示。下面分别说明各个接口和类的功�
     如果一个接口有多个实现类，则在使用 *@Bean* 标注时必须填入类的名称，在注入的地方 *@Inject* 也必须使用名称，即这种情况必须使用**名称注入方式**
     
 ## 3.2 循环依赖问题
-**3.2.1 什么是循环依赖？**
-
+### 3.2.1 什么是循环依赖？
 循环依赖就是循环引用，两个或多个Bean相互之间持有对方的引用，比如A类引用B类，B类引用C类，C类又引用A类，它们最终反映为一个环。
     
-**3.2.2 Spirng是如何解决循环依赖？**
-
+### 3.2.2 Spirng是如何解决循环依赖？
 Spring容器循环依赖包括构造器循环依赖和setter循环依赖。
     
 **构造器循环依赖**表示通过构造器注入构成循环依赖，次依赖是无法解决的，只能抛出 *BeanCurrentlyInCreationException* 异常表示循环依赖。在创建A类时，构造器需要B类，那将去创建B类，在创建B类时又发现需要C类，那将去创建C类，最终在创建C类又发现需要A类，从而形成一个环，无法创建。
@@ -51,7 +58,7 @@ Spring容器将每一个正在创建的Bean标识符放在一个“当前创建B
     
 **setter循环依赖**表示通过setter注入方式构成的循环依赖。对于setter循环依赖，spring是通过先无参构造方法创建一个实例提前把A的引用暴露出来并缓存，并且只能解决单例作用域的Bean循环依赖，而对于`prototype`作用域的Bean，由于Spring不缓存，无法提前暴露一个创建中的Bean，故不能解决。
 
-**3.2.3 Tauren是如何解决循环依赖？**
+### 3.2.3 Tauren是如何解决循环依赖
 
 对于构造器循环依赖，tauren同样无法解决，因为这本身就是无解的。对于setter循环依赖，由于tauren只有注解模式，没有xml模式，且在注入字段表示的对象时，该字段所在的类已经被实例化了，因此setter循环依赖在tauren中并不存在。
 
