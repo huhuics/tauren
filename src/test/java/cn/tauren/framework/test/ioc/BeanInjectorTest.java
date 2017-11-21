@@ -4,13 +4,18 @@
  */
 package cn.tauren.framework.test.ioc;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.tauren.framework.ioc.DefaultBeanFactory;
-import cn.tauren.framework.ioc.DefaultBeanInjector;
-import cn.tauren.framework.ioc.DefaultClassScanner;
+import cn.tauren.framework.ioc.api.BeanFactory;
+import cn.tauren.framework.ioc.api.BeanInjector;
 import cn.tauren.framework.ioc.api.ClassScanner;
+import cn.tauren.framework.ioc.impl.DefaultBeanFactory;
+import cn.tauren.framework.ioc.impl.DefaultBeanInjector;
+import cn.tauren.framework.ioc.impl.DefaultClassScanner;
+import cn.tauren.framework.test.StudentService;
+import cn.tauren.framework.test.TeacherService;
 
 /**
  * 
@@ -19,22 +24,30 @@ import cn.tauren.framework.ioc.api.ClassScanner;
  */
 public class BeanInjectorTest {
 
-    private ClassScanner        scanner;
+    private ClassScanner scanner;
 
-    private DefaultBeanFactory       container;
+    private BeanFactory  factory;
 
-    private DefaultBeanInjector injector;
+    private BeanInjector injector;
 
     @Before
     public void init() {
         scanner = new DefaultClassScanner("cn.tauren.framework.test");
-        container = new DefaultBeanFactory(scanner);
-        injector = new DefaultBeanInjector(container, scanner);
+        factory = new DefaultBeanFactory(scanner);
+        injector = new DefaultBeanInjector(factory, scanner);
     }
 
     @Test
     public void testInject() {
-        injector.inject();
+        Assert.assertNotNull(injector);
+    }
+
+    @Test
+    public void testReference() {
+        TeacherService tService = factory.getBean("teacherServiceImpl", TeacherService.class);
+        StudentService sService = factory.getBean("studentServiceImpl", StudentService.class);
+        tService.tech();
+        sService.study();
     }
 
 }

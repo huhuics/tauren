@@ -11,4 +11,6 @@ package cn.tauren.framework.test;
  */
 public interface TeacherService {
 
+    void tech();
+
 }

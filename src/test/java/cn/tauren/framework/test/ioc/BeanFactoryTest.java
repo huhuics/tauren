@@ -8,9 +8,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import cn.tauren.framework.exception.BeanNotOfRequiredTypeException;
-import cn.tauren.framework.ioc.DefaultBeanFactory;
-import cn.tauren.framework.ioc.DefaultClassScanner;
 import cn.tauren.framework.ioc.api.BeanFactory;
+import cn.tauren.framework.ioc.impl.DefaultBeanFactory;
+import cn.tauren.framework.ioc.impl.DefaultClassScanner;
 import cn.tauren.framework.test.ClassroomService;
 import cn.tauren.framework.test.StudentService;
 

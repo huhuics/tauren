@@ -16,15 +16,12 @@ import cn.tauren.framework.ioc.annotation.Inject;
 public class TeacherServiceImpl implements TeacherService {
 
     @Inject
-    private StudentService   stuService;
+    private StudentService stuService;
 
-    @Inject
-    private ClassroomService cService;
-
+    @Override
     public void tech() {
+        stuService.study();
         System.out.println("TeacherService.tech()");
-        stuService.display();
-        cService.clean();
     }
 
 }

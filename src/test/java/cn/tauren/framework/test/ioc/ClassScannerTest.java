@@ -10,7 +10,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.tauren.framework.ioc.DefaultClassScanner;
+import cn.tauren.framework.ioc.impl.DefaultClassScanner;
 
 /**
  * 

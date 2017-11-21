@@ -2,7 +2,7 @@
  * 深圳金融电子结算中心
  * Copyright (c) 1995-2017 All Rights Reserved.
  */
-package cn.tauren.framework.ioc;
+package cn.tauren.framework.ioc.impl;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -41,6 +41,7 @@ public class DefaultBeanInjector implements BeanInjector {
         this.objs = new ArrayList<Object>(factory.getBeans());
         this.factory = factory;
         this.scanner = scanner;
+        inject();
     }
 
     @Override
@@ -66,6 +67,9 @@ public class DefaultBeanInjector implements BeanInjector {
         }
     }
 
+    /**
+     * 获取被注入的对象实例
+     */
     private Object getInjectedObject(Field field) {
 
         //1.按名称注入

@@ -11,6 +11,6 @@ package cn.tauren.framework.test;
  */
 public interface StudentService {
 
-    String display();
+    String study();
 
 }

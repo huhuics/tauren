@@ -5,6 +5,7 @@
 package cn.tauren.framework.test;
 
 import cn.tauren.framework.ioc.annotation.Bean;
+import cn.tauren.framework.ioc.annotation.Inject;
 
 /**
  * 
@@ -14,10 +15,14 @@ import cn.tauren.framework.ioc.annotation.Bean;
 @Bean
 public class StudentServiceImpl implements StudentService {
 
+    @Inject
+    private TeacherService tService;
+
     @Override
-    public String display() {
+    public String study() {
         String str = "学生：鲁智深" + ", age：32";
         System.out.println(str);
+        tService.tech();
         return str;
     }
 }
