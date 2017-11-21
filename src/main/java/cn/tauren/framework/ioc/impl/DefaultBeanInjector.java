@@ -44,8 +44,7 @@ public class DefaultBeanInjector implements BeanInjector {
         inject();
     }
 
-    @Override
-    public void inject() {
+    private void inject() {
         for (Object obj : objs) {
             Class<?> clazz = obj.getClass();
             Field[] fields = clazz.getDeclaredFields();
@@ -55,9 +54,8 @@ public class DefaultBeanInjector implements BeanInjector {
                 if (field.isAnnotationPresent(Inject.class)) {
                     field.setAccessible(true);
 
-                    Object fieldVal = getInjectedObject(field);
-
                     try {
+                        Object fieldVal = getInjectedObject(field);
                         field.set(obj, fieldVal);
                     } catch (Exception e) {
                         throw new RuntimeException("注入对象发生异常 ", e);
@@ -77,7 +75,7 @@ public class DefaultBeanInjector implements BeanInjector {
         Object injectedObj = null;
         try {
             injectedObj = factory.getBean(className);
-        } catch (BeanException e) {
+        } catch (BeanException e) { //ignore
         }
 
         //2.按类型注入
@@ -87,7 +85,7 @@ public class DefaultBeanInjector implements BeanInjector {
             AssertUtil.assertTrue(classesBySuper.size() <= 1, "该接口有多个实现类,请使用名称注入方式");
             try {
                 injectedObj = factory.getBean(classesBySuper.get(0));
-            } catch (BeanException e) {
+            } catch (BeanException e) { //ignore
             }
         }
 

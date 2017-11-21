@@ -54,7 +54,7 @@ IoC实现的类图如上图所示。下面分别说明各个接口和类的功�
 ### 3.2.2 Spirng是如何解决循环依赖？
 Spring容器循环依赖包括构造器循环依赖和setter循环依赖。
     
-**构造器循环依赖**表示通过构造器注入构成循环依赖，次依赖是无法解决的，只能抛出 *BeanCurrentlyInCreationException* 异常表示循环依赖。在创建A类时，构造器需要B类，那将去创建B类，在创建B类时又发现需要C类，那将去创建C类，最终在创建C类又发现需要A类，从而形成一个环，无法创建。
+**构造器循环依赖**表示通过构造器注入构成循环依赖，此依赖是无法解决的，只能抛出 *BeanCurrentlyInCreationException* 异常表示循环依赖。在创建A类时，构造器需要B类，那将去创建B类，在创建B类时又发现需要C类，那将去创建C类，最终在创建C类又发现需要A类，从而形成一个环，无法创建。
     
 Spring容器将每一个正在创建的Bean标识符放在一个“当前创建Bean池”中，Bean标识符在Bean创建过程中一直保存在这个池中（Map保存），因此在创建Bean过程中发现自己已经在这个池中时将抛出 *BeanCurrentlyInCreationException* 异常表示循环依赖；而对于创建完毕的Bean则从池中清除。
     
@@ -75,6 +75,7 @@ public class UserService {
 
 ```java
 public class Login {
+
     @Inject
     private UserService userService;
     
