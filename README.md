@@ -7,7 +7,9 @@
 - [三. 实现方式](#三-实现方式)
     - [3.1 IoC(Inversion of Control)](#31-iocinversion-of-control)
     - [3.2 循环依赖问题](#32-循环依赖问题)
-    
+- [四. 使用方式](#四-使用方式)
+    - [4.1 IoC使用](#41-ioc使用)
+   
 
 
 # 一. 简介
@@ -62,7 +64,24 @@ Spring容器将每一个正在创建的Bean标识符放在一个“当前创建B
 
 对于构造器循环依赖，tauren同样无法解决，因为这本身就是无解的。对于setter循环依赖，由于tauren只有注解模式，没有xml模式，且在注入字段表示的对象时，该字段所在的类已经被实例化了，因此setter循环依赖在tauren中并不存在。
 
+# 四. 使用方式
+## 4.1 IoC使用
+```java
+@Bean
+public class UserService {
+    //do something
+}
+```
 
+```java
+public class Login {
+    @Inject
+    private UserService userService;
+    
+    //do something
+}
+```
 
+#代码持续更新中#
 
 
