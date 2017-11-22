@@ -78,6 +78,10 @@ public class DefaultBeanInjector implements BeanInjector {
         } catch (BeanException e) { //ignore
         }
 
+        if (injectedObj != null) {
+            return injectedObj;
+        }
+
         //2.按类型注入
         Class<?> type = field.getType();
         List<Class<?>> classesBySuper = scanner.getClassesBySuper(type);

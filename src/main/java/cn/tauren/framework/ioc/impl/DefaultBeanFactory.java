@@ -10,8 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import cn.tauren.framework.aop.annotation.Intercept;
+import cn.tauren.framework.aop.api.ProxyResolver;
+import cn.tauren.framework.aop.impl.ProxyResolverImpl;
 import cn.tauren.framework.exception.BeanCreationException;
 import cn.tauren.framework.exception.BeanException;
 import cn.tauren.framework.exception.BeanNotOfRequiredTypeException;
@@ -51,10 +55,14 @@ public class DefaultBeanFactory implements BeanFactory {
     /** 类扫描器 */
     private final ClassScanner          scanner;
 
+    /** 代理类生成器 */
+    private final ProxyResolver         proxyResolver;
+
     public DefaultBeanFactory(ClassScanner scanner) {
         nameContainer = new HashMap<String, Object>();
         typeContainer = new HashMap<Class<?>, Object>();
         this.scanner = scanner;
+        proxyResolver = new ProxyResolverImpl();
         initContainer();
     }
 
@@ -112,6 +120,12 @@ public class DefaultBeanFactory implements BeanFactory {
 
                 try {
                     Object instance = clazz.newInstance();
+
+                    if (clazz.isAnnotationPresent(Intercept.class)) {
+                        //生成的代理对象替换原对象
+                        instance = getProxyInstance(clazz, instance);
+                    }
+
                     nameContainer.put(beanName, instance);
                     typeContainer.put(clazz, instance);
                 } catch (Exception e) {
@@ -119,6 +133,38 @@ public class DefaultBeanFactory implements BeanFactory {
                 }
             }
         }
+    }
+
+    /**
+     * @param clazz  被代理类的类型(类或接口)
+     * @param target 被代理类的实例
+     * @return       代理类
+     */
+    private Object getProxyInstance(Class<?> clazz, Object target) {
+        Intercept interAnno = clazz.getAnnotation(Intercept.class);
+        AssertUtil.assertTrue(StringUtils.isNotBlank(interAnno.name()) || !interAnno.type().isInstance(ObjectUtils.NULL), "Intercept的name和type不能同时为空");
+
+        Object interceptor = null;
+        if (StringUtils.isNotBlank(interAnno.name())) {
+            try {
+                interceptor = getBean(interAnno.name());
+            } catch (BeanException e) {
+            }
+        }
+
+        if (interceptor == null) {
+
+            try {
+                interceptor = getBean(interAnno.type());
+            } catch (BeanException e) {
+            }
+
+            if (interceptor == null) {
+                throw new NoSuchBeanException("no such bean named " + interAnno.name() + " or type is " + interAnno.type().getSimpleName());
+            }
+        }
+
+        return proxyResolver.newProxyInstance(interceptor, clazz, target);
     }
 
 }

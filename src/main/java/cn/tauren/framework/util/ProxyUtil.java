@@ -23,6 +23,7 @@ public class ProxyUtil {
         enhancer.setCallback(new InvocationHandler() {
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                System.out.println("invoked by proxy");
                 return method.invoke(target, args);
             }
         });

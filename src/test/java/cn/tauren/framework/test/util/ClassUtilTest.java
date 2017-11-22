@@ -7,6 +7,8 @@ package cn.tauren.framework.test.util;
 import java.lang.reflect.Modifier;
 
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils.Null;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -63,6 +65,11 @@ public class ClassUtilTest {
     public void testInstance() {
         ClassroomService cs = new ClassroomService();
         Assert.assertTrue(ClassroomService.class.isInstance(cs));
+    }
+
+    @Test
+    public void testNullInstance() {
+        Assert.assertTrue(Null.class.isInstance(ObjectUtils.NULL));
     }
 
     class AbClass {

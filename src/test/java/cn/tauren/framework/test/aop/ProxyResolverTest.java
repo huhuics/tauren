@@ -2,9 +2,8 @@
  * 深圳金融电子结算中心
  * Copyright (c) 1995-2017 All Rights Reserved.
  */
-package cn.tauren.framework.test.ioc;
+package cn.tauren.framework.test.aop;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,17 +13,14 @@ import cn.tauren.framework.ioc.api.ClassScanner;
 import cn.tauren.framework.ioc.impl.DefaultBeanFactory;
 import cn.tauren.framework.ioc.impl.DefaultBeanInjector;
 import cn.tauren.framework.ioc.impl.DefaultClassScanner;
-import cn.tauren.framework.test.StudentService;
-import cn.tauren.framework.test.TeacherService;
 import cn.tauren.framework.test.UserService;
-import cn.tauren.framework.test.UserServiceImpl;
 
 /**
  * 
  * @author HuHui
- * @version $Id: BeanInjectorTest.java, v 0.1 2017年11月17日 下午5:17:58 HuHui Exp $
+ * @version $Id: ProxyResolverTest.java, v 0.1 2017年11月22日 上午11:33:13 HuHui Exp $
  */
-public class BeanInjectorTest {
+public class ProxyResolverTest {
 
     private ClassScanner scanner;
 
@@ -40,22 +36,8 @@ public class BeanInjectorTest {
     }
 
     @Test
-    public void testInject() {
-        Assert.assertNotNull(injector);
+    public void testLogProxy() {
+        UserService userService = factory.getBean("userServiceImpl", UserService.class);
+        userService.getUser(80477);
     }
-
-    @Test
-    public void testReference() {
-        TeacherService tService = factory.getBean("teacherServiceImpl", TeacherService.class);
-        StudentService sService = factory.getBean("studentServiceImpl", StudentService.class);
-        tService.tech();
-        sService.study();
-    }
-
-    @Test
-    public void testProxy() {
-        UserService userService = factory.getBean("userServiceImpl", UserServiceImpl.class);
-        userService.getUser(112233);
-    }
-
 }
