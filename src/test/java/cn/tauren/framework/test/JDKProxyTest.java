@@ -30,7 +30,7 @@ public class JDKProxyTest {
             }
         });
 
-        uService.getUser(22);
+        uService.getId(22);
 
     }
 }

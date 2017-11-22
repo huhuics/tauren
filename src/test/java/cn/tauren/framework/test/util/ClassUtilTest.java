@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import cn.tauren.framework.test.ClassroomService;
 import cn.tauren.framework.test.StudentService;
+import cn.tauren.framework.test.StudentServiceImpl;
 import cn.tauren.framework.util.ClassUtil;
 
 /**
@@ -42,7 +43,7 @@ public class ClassUtilTest {
 
     @Test
     public void testAssign() {
-        boolean ret = StudentService.class.isAssignableFrom(StudentService.class);
+        boolean ret = StudentService.class.isAssignableFrom(StudentServiceImpl.class);
         Assert.assertTrue(ret);
     }
 

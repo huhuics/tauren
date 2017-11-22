@@ -34,7 +34,7 @@ public class CGlibProxyTest {
         });
 
         UserService proxy = (UserService) enhancer.create();
-        proxy.getUser(112);
+        proxy.getId(112);
 
     }
 
@@ -52,15 +52,15 @@ public class CGlibProxyTest {
         });
 
         UserService proxy = (UserService) enhancer.create();
-        proxy.getUser(211);
+        proxy.getId(211);
     }
 
     @Test
     public void testProxyUtil() {
         UserService proxy = ProxyUtil.newProxyInstance(UserService.class, new UserServiceImpl());
-        proxy.getUser(111);
+        proxy.getId(111);
 
         UserServiceImpl proxy1 = ProxyUtil.newProxyInstance(UserServiceImpl.class, new UserServiceImpl());
-        proxy1.getUser(222);
+        proxy1.getId(222);
     }
 }

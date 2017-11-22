@@ -10,7 +10,6 @@ import org.junit.Test;
 import cn.tauren.framework.exception.BeanNotOfRequiredTypeException;
 import cn.tauren.framework.ioc.api.BeanFactory;
 import cn.tauren.framework.ioc.impl.DefaultBeanFactory;
-import cn.tauren.framework.ioc.impl.DefaultClassScanner;
 import cn.tauren.framework.test.ClassroomService;
 import cn.tauren.framework.test.StudentService;
 
@@ -21,7 +20,7 @@ import cn.tauren.framework.test.StudentService;
  */
 public class BeanFactoryTest {
 
-    private BeanFactory factory = new DefaultBeanFactory(new DefaultClassScanner("cn.tauren.framework.test"));
+    private BeanFactory factory = new DefaultBeanFactory("cn.tauren.framework.test");
 
     @Test
     public void testGetBeanByName() {

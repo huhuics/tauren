@@ -18,10 +18,16 @@ import cn.tauren.framework.test.aop.LogProxy;
 public class UserServiceImpl implements UserService {
 
     @Override
-    public String getUser(int id) {
+    public String getId(int id) {
         String str = "user's id is " + id;
         System.out.println(str);
         return str;
+    }
+
+    @Override
+    public String getName(String name) {
+        System.out.println("user's name is " + name);
+        return name;
     }
 
 }

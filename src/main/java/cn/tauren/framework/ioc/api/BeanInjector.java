@@ -11,4 +11,9 @@ package cn.tauren.framework.ioc.api;
  */
 public interface BeanInjector {
 
+    /**
+     * 注入类
+     */
+    void inject();
+
 }

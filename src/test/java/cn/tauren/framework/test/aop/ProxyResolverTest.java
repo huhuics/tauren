@@ -8,11 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cn.tauren.framework.ioc.api.BeanFactory;
-import cn.tauren.framework.ioc.api.BeanInjector;
-import cn.tauren.framework.ioc.api.ClassScanner;
 import cn.tauren.framework.ioc.impl.DefaultBeanFactory;
-import cn.tauren.framework.ioc.impl.DefaultBeanInjector;
-import cn.tauren.framework.ioc.impl.DefaultClassScanner;
 import cn.tauren.framework.test.UserService;
 
 /**
@@ -22,22 +18,17 @@ import cn.tauren.framework.test.UserService;
  */
 public class ProxyResolverTest {
 
-    private ClassScanner scanner;
-
-    private BeanFactory  factory;
-
-    private BeanInjector injector;
+    private BeanFactory factory;
 
     @Before
     public void init() {
-        scanner = new DefaultClassScanner("cn.tauren.framework.test");
-        factory = new DefaultBeanFactory(scanner);
-        injector = new DefaultBeanInjector(factory, scanner);
+        factory = new DefaultBeanFactory("cn.tauren.framework.test");
     }
 
     @Test
     public void testLogProxy() {
         UserService userService = factory.getBean("userServiceImpl", UserService.class);
-        userService.getUser(80477);
+        userService.getId(80477);
+        userService.getName("扈三娘");
     }
 }

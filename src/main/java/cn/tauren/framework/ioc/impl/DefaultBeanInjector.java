@@ -41,10 +41,10 @@ public class DefaultBeanInjector implements BeanInjector {
         this.objs = new ArrayList<Object>(factory.getBeans());
         this.factory = factory;
         this.scanner = scanner;
-        inject();
     }
 
-    private void inject() {
+    @Override
+    public void inject() {
         for (Object obj : objs) {
             Class<?> clazz = obj.getClass();
             Field[] fields = clazz.getDeclaredFields();

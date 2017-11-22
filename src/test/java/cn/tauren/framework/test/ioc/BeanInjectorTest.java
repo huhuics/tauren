@@ -9,11 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cn.tauren.framework.ioc.api.BeanFactory;
-import cn.tauren.framework.ioc.api.BeanInjector;
-import cn.tauren.framework.ioc.api.ClassScanner;
 import cn.tauren.framework.ioc.impl.DefaultBeanFactory;
-import cn.tauren.framework.ioc.impl.DefaultBeanInjector;
-import cn.tauren.framework.ioc.impl.DefaultClassScanner;
 import cn.tauren.framework.test.StudentService;
 import cn.tauren.framework.test.TeacherService;
 import cn.tauren.framework.test.UserService;
@@ -26,36 +22,29 @@ import cn.tauren.framework.test.UserServiceImpl;
  */
 public class BeanInjectorTest {
 
-    private ClassScanner scanner;
-
-    private BeanFactory  factory;
-
-    private BeanInjector injector;
+    private BeanFactory factory;
 
     @Before
     public void init() {
-        scanner = new DefaultClassScanner("cn.tauren.framework.test");
-        factory = new DefaultBeanFactory(scanner);
-        injector = new DefaultBeanInjector(factory, scanner);
+        factory = new DefaultBeanFactory("cn.tauren.framework.test");
     }
 
     @Test
     public void testInject() {
-        Assert.assertNotNull(injector);
     }
 
     @Test
     public void testReference() {
         TeacherService tService = factory.getBean("teacherServiceImpl", TeacherService.class);
         StudentService sService = factory.getBean("studentServiceImpl", StudentService.class);
-        tService.tech();
-        sService.study();
+        Assert.assertNotNull(tService);
+        Assert.assertNotNull(sService);
     }
 
     @Test
     public void testProxy() {
         UserService userService = factory.getBean("userServiceImpl", UserServiceImpl.class);
-        userService.getUser(112233);
+        userService.getId(112233);
     }
 
 }

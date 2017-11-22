@@ -22,6 +22,7 @@ import cn.tauren.framework.exception.BeanNotOfRequiredTypeException;
 import cn.tauren.framework.exception.NoSuchBeanException;
 import cn.tauren.framework.ioc.annotation.Bean;
 import cn.tauren.framework.ioc.api.BeanFactory;
+import cn.tauren.framework.ioc.api.BeanInjector;
 import cn.tauren.framework.ioc.api.ClassScanner;
 import cn.tauren.framework.util.AssertUtil;
 import cn.tauren.framework.util.ClassUtil;
@@ -43,6 +44,8 @@ import cn.tauren.framework.util.ClassUtil;
  */
 public class DefaultBeanFactory implements BeanFactory {
 
+    private static String               defaultPkgName;
+
     /**
      * 存放类的实例的Map,即用于存储Bean的容器
      * key为类的name
@@ -55,15 +58,29 @@ public class DefaultBeanFactory implements BeanFactory {
     /** 类扫描器 */
     private final ClassScanner          scanner;
 
+    /** 类注入器 */
+    private final BeanInjector          injector;
+
     /** 代理类生成器 */
     private final ProxyResolver         proxyResolver;
 
-    public DefaultBeanFactory(ClassScanner scanner) {
+    public DefaultBeanFactory() {
+        //TODO init defaultPkgName
+        this(defaultPkgName);
+    }
+
+    public DefaultBeanFactory(String pkgName) {
         nameContainer = new HashMap<String, Object>();
         typeContainer = new HashMap<Class<?>, Object>();
-        this.scanner = scanner;
+        scanner = new DefaultClassScanner(pkgName);
+        injector = new DefaultBeanInjector(this, scanner);
         proxyResolver = new ProxyResolverImpl();
+
+        //初始化容器
         initContainer();
+
+        //注入类
+        inject();
     }
 
     @Override
@@ -165,6 +182,10 @@ public class DefaultBeanFactory implements BeanFactory {
         }
 
         return proxyResolver.newProxyInstance(interceptor, clazz, target);
+    }
+
+    private void inject() {
+        injector.inject();
     }
 
 }

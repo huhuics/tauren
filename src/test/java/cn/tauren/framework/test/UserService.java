@@ -11,6 +11,8 @@ package cn.tauren.framework.test;
  */
 public interface UserService {
 
-    String getUser(int id);
+    String getId(int id);
+
+    String getName(String name);
 
 }
