@@ -102,7 +102,6 @@ public class CGlibProxyTest {
             }
         });
 
-        proxy.study();
         proxy.getId(110);
     }
 

@@ -20,7 +20,6 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public void tech() {
-        stuService.study();
         System.out.println("TeacherService.tech()");
     }
 

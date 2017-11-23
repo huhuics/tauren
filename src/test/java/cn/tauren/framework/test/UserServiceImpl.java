@@ -16,7 +16,7 @@ import cn.tauren.framework.test.aop.ProcessTimeProxy;
  */
 @Bean
 @Intercept(type = { LogProxy.class, ProcessTimeProxy.class })
-public class UserServiceImpl implements UserService, StudentService {
+public class UserServiceImpl implements UserService {
 
     @Override
     public String getId(int id) {
@@ -33,13 +33,6 @@ public class UserServiceImpl implements UserService, StudentService {
         }
         System.out.println("user's name is " + name);
         return name;
-    }
-
-    @Override
-    public String study() {
-        String str = "UserServiceImpl.study()";
-        System.out.println(str);
-        return str;
     }
 
 }

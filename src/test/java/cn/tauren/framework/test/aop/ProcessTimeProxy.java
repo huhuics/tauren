@@ -27,7 +27,7 @@ public class ProcessTimeProxy extends ProxyInterceptor {
     @Override
     protected void after(Class<?> targetClass, Method method, Object[] args) {
         long processTime = System.currentTimeMillis() - start;
-        System.out.println("执行时间：" + processTime);
+        System.out.println(targetClass.getSimpleName() + "." + method.getName() + "执行时间：" + processTime);
     }
 
 }

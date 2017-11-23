@@ -22,7 +22,7 @@ public class ProxyResolverTest {
 
     @Before
     public void init() {
-        factory = new DefaultBeanFactory("cn.tauren.framework.test");
+        factory = new DefaultBeanFactory();
     }
 
     @Test

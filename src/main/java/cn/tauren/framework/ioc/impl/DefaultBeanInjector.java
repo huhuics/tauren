@@ -86,7 +86,7 @@ public class DefaultBeanInjector implements BeanInjector {
         Class<?> type = field.getType();
         List<Class<?>> classesBySuper = scanner.getClassesBySuper(type);
         if (CollectionUtils.isNotEmpty(classesBySuper)) {
-            AssertUtil.assertTrue(classesBySuper.size() <= 1, "该接口有多个实现类,请使用名称注入方式");
+            AssertUtil.assertTrue(classesBySuper.size() <= 1, type.getName() + "接口有多个实现类,请使用名称注入方式");
             try {
                 injectedObj = factory.getBean(classesBySuper.get(0));
             } catch (BeanException e) { //ignore

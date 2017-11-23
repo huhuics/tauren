@@ -77,11 +77,11 @@ public class DefaultBeanFactory implements BeanFactory {
         nameContainer = new HashMap<String, Object>();
         typeContainer = new HashMap<Class<?>, Object>();
         scanner = new DefaultClassScanner(pkgName);
-        injector = new DefaultBeanInjector(this, scanner);
         proxyResolver = new ProxyResolverImpl();
 
         //初始化容器
         initContainer();
+        injector = new DefaultBeanInjector(this, scanner);
 
         //注入类
         inject();
