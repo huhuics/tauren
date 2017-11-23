@@ -89,12 +89,9 @@ public class DefaultBeanInjector implements BeanInjector {
             AssertUtil.assertTrue(classesBySuper.size() <= 1, type.getName() + "接口有多个实现类,请使用名称注入方式");
             try {
                 injectedObj = factory.getBean(classesBySuper.get(0));
-            } catch (BeanException e) { //ignore
+            } catch (BeanException e) {
+                throw new NoSuchBeanException("no such bean named " + className + " or type is " + type.getSimpleName(), e);
             }
-        }
-
-        if (injectedObj == null) {
-            throw new NoSuchBeanException("no such bean named " + className + " or type is " + type.getSimpleName());
         }
 
         return injectedObj;

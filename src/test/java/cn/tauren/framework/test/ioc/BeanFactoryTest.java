@@ -37,6 +37,13 @@ public class BeanFactoryTest {
     }
 
     @Test
+    public void testGetBeanByType2() {
+        StudentService bean = factory.getBean(StudentService.class);
+        Assert.assertNotNull(bean);
+        bean.study();
+    }
+
+    @Test
     public void testGetBeanByNameAndType() {
         ClassroomService bean3 = factory.getBean("classroomService", ClassroomService.class);
         Assert.assertNotNull(bean3);

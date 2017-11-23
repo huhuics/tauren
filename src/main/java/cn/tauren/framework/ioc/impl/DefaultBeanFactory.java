@@ -4,8 +4,10 @@
  */
 package cn.tauren.framework.ioc.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -89,6 +91,8 @@ public class DefaultBeanFactory implements BeanFactory {
 
     @Override
     public Object getBean(String name) throws BeanException {
+        AssertUtil.assertNotBlank(name, "bean name can not by empty");
+
         Object object = nameContainer.get(name);
         if (object == null) {
             throw new NoSuchBeanException("no such bean named " + name);
@@ -97,17 +101,38 @@ public class DefaultBeanFactory implements BeanFactory {
     }
 
     @Override
-    public Object getBean(Class<?> requiredType) throws BeanException {
-        Object object = typeContainer.get(requiredType);
-        if (object == null) {
-            throw new NoSuchBeanException("no such bean's type is " + requiredType.getSimpleName());
+    @SuppressWarnings("unchecked")
+    public <T> T getBean(Class<T> requiredType) throws BeanException {
+        AssertUtil.assertNotNull(requiredType, "bean type can not be null");
+
+        Object object = null;
+        String errMsg = "no such bean's type is " + requiredType.getSimpleName();
+
+        //判断requiredType是接口/抽象类
+        if (ClassUtil.isInterfaceOrAbstract(requiredType)) {
+            List<Object> beans = getBeansByInterface(requiredType);
+
+            AssertUtil.assertNotBlank(beans, errMsg);
+            AssertUtil.assertTrue(beans.size() <= 1, "接口有多个实现类,请使用名称注入方式");
+
+            object = beans.get(0);
+        } else {
+            object = typeContainer.get(requiredType);
         }
-        return object;
+
+        if (object == null) {
+            throw new NoSuchBeanException(errMsg);
+        }
+
+        return (T) object;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getBean(String name, Class<T> requiredType) throws BeanException {
+        AssertUtil.assertNotBlank(name, "bean name can not by empty");
+        AssertUtil.assertNotNull(requiredType, "bean type can not be null");
+
         Object object = nameContainer.get(name);
         if (object == null) {
             throw new NoSuchBeanException("no such bean named " + name);
@@ -182,6 +207,23 @@ public class DefaultBeanFactory implements BeanFactory {
             throw new NoSuchBeanException("no such bean's type is " + interceptorClass.getSimpleName());
         }
         return proxyResolver.newProxyInstance(interceptor, targetClass, target);
+    }
+
+    /**
+     * 通过接口查找bean
+     * @param requiredType
+     * @return
+     */
+    private List<Object> getBeansByInterface(Class<?> requiredType) {
+        List<Object> objects = new ArrayList<Object>();
+        Iterator<Class<?>> iterator = typeContainer.keySet().iterator();
+        while (iterator.hasNext()) {
+            Class<?> key = iterator.next();
+            if (requiredType.isAssignableFrom(key)) {
+                objects.add(typeContainer.get(key));
+            }
+        }
+        return objects;
     }
 
     private void inject() {
