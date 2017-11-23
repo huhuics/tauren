@@ -113,7 +113,7 @@ public class DefaultBeanFactory implements BeanFactory {
             List<Object> beans = getBeansByInterface(requiredType);
 
             AssertUtil.assertNotBlank(beans, errMsg);
-            AssertUtil.assertTrue(beans.size() <= 1, "接口有多个实现类,请使用名称注入方式");
+            AssertUtil.assertTrue(beans.size() <= 1, requiredType.getName() + "接口有多个实现类,请使用名称注入方式");
 
             object = beans.get(0);
         } else {
@@ -211,7 +211,7 @@ public class DefaultBeanFactory implements BeanFactory {
 
     /**
      * 通过接口查找bean
-     * @param requiredType
+     * @param requiredType 接口类型
      * @return
      */
     private List<Object> getBeansByInterface(Class<?> requiredType) {

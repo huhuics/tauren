@@ -11,6 +11,7 @@ import cn.tauren.framework.exception.BeanException;
 import cn.tauren.framework.exception.BeanNotOfRequiredTypeException;
 import cn.tauren.framework.ioc.api.BeanFactory;
 import cn.tauren.framework.ioc.impl.DefaultBeanFactory;
+import cn.tauren.framework.test.AbstractService;
 import cn.tauren.framework.test.ClassroomService;
 import cn.tauren.framework.test.StudentService;
 import cn.tauren.framework.test.UserService;
@@ -22,7 +23,7 @@ import cn.tauren.framework.test.UserService;
  */
 public class BeanFactoryTest {
 
-    private BeanFactory factory = new DefaultBeanFactory("cn.tauren.framework.test");
+    private BeanFactory factory = new DefaultBeanFactory();
 
     @Test
     public void testGetBeanByName() {
@@ -86,5 +87,11 @@ public class BeanFactoryTest {
         }
         Assert.assertNotNull(bean4);
 
+    }
+
+    @Test
+    public void testAbstractClass() {
+        AbstractService bean = factory.getBean(AbstractService.class);
+        bean.service();
     }
 }
