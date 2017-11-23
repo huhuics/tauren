@@ -64,6 +64,13 @@ Spring容器将每一个正在创建的Bean标识符放在一个“当前创建B
 
 对于构造器循环依赖，tauren同样无法解决，因为这本身就是无解的。对于setter循环依赖，由于tauren只有注解模式，没有xml模式，且在注入字段表示的对象时，该字段所在的类已经被实例化了，因此setter循环依赖在tauren中并不存在。
 
+## 3.2 AOP(Aspect Oriented Programming)
+*Tauren*使用*CGLib*来实现代理类的生成
+
+*Tauren*的AOP中暂时不支持对类的批量拦截，目前只做到了对指定类所有方法的拦截。首先定义了拦截模板类[ProxyInterceptor](https://github.com/huhuics/tauren/blob/master/src/main/java/cn/tauren/framework/aop/api/ProxyInterceptor.java)，这个类定了模板方法，有前置增强before()，后置增强after()及异常增强exception()。客户端的拦截器需要继承此类并选择性覆盖这三个方法。*ProxyInterceptor*同时负责代理类的创建。
+
+*BeanFactory*中在实例化Bean时，如果发现某个类被[@Intercept](https://github.com/huhuics/tauren/blob/master/src/main/java/cn/tauren/framework/aop/annotation/Intercept.java)修饰，则说明该类将会被框架拦截并增强，*@Intercept* 指定了增强类的名称或类型，二者不能同时为空。BeanFactory通过名称或者类型找到了目标类的增强类，通过创建代理类实例，取代容器中目标类的实例，这样从BeanFactory中取出的实例就是增强之后的对象。
+
 # 四. 使用方式
 ## 4.1 IoC使用
 ```java
@@ -83,6 +90,35 @@ public class Login {
 }
 ```
 
-#代码持续更新中#
+## 4.2 AOP使用
+以用户服务类`UserServiceImpl`为例，需要当这个类中所有方法增加日志功能，先写好`LogProxy`，并继承`ProxyInterceptor`：
+```java
+@Bean
+public class LogProxy extends ProxyInterceptor {
+    @Override
+    protected void before() {
+        System.out.println("log from before");
+    }
+
+    @Override
+    protected void after() {
+        System.out.println("log from after");
+    }
+}
+```
+
+然后在`UserServiceImpl`上打上`@Intercept`注解:
+```java
+@Bean
+@Intercept(type = LogProxy.class)
+public class UserServiceImpl implements UserService {
+    // do something
+}
+```
+
+然后正常调用`UserService`中的方法，原方法即得到增强。
+
+
+*代码持续更新中*
 
 
