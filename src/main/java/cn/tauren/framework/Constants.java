@@ -11,6 +11,9 @@ package cn.tauren.framework;
  */
 public interface Constants {
 
-    static final String FILE_DOT = ".";
+    static final String FILE_DOT     = ".";
+
+    /** 工程扫码包路径 */
+    static final String SCAN_PACKAGE = "scan.package";
 
 }

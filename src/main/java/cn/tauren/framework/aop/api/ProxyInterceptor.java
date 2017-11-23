@@ -20,21 +20,21 @@ public abstract class ProxyInterceptor {
     /**
      * 前置增强
      */
-    protected void before() {
+    protected void before(Class<?> targetClass, Method method, Object[] args) {
 
     }
 
     /**
      * 后置增强
      */
-    protected void after() {
+    protected void after(Class<?> targetClass, Method method, Object[] args) {
 
     }
 
     /**
      * 异常
      */
-    protected void exception(Throwable e) {
+    protected void exception(Class<?> targetClass, Method method, Object[] args, Throwable e) {
 
     }
 
@@ -45,18 +45,18 @@ public abstract class ProxyInterceptor {
      * @return             代理对象
      */
     @SuppressWarnings("unchecked")
-    public <T> T newProxyInstance(Class<T> targetClass, final Object target) {
+    public <T> T newProxyInstance(final Class<T> targetClass, final Object target) {
         return (T) Enhancer.create(targetClass, new InvocationHandler() {
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                before();
+                before(targetClass, method, args);
                 Object ret = null;
                 try {
                     ret = method.invoke(target, args);
                 } catch (Exception e) {
-                    exception(e);
+                    exception(targetClass, method, args, e);
                 }
-                after();
+                after(targetClass, method, args);
                 return ret;
             }
         });

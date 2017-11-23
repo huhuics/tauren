@@ -12,6 +12,7 @@ import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import cn.tauren.framework.ConfigFileReader;
 import cn.tauren.framework.aop.annotation.Intercept;
 import cn.tauren.framework.aop.api.ProxyResolver;
 import cn.tauren.framework.aop.impl.ProxyResolverImpl;
@@ -43,8 +44,6 @@ import cn.tauren.framework.util.ClassUtil;
  */
 public class DefaultBeanFactory implements BeanFactory {
 
-    private static String               defaultPkgName;
-
     /**
      * 存放类的实例的Map,即用于存储Bean的容器
      * key为类的name
@@ -52,6 +51,11 @@ public class DefaultBeanFactory implements BeanFactory {
      */
     private final Map<String, Object>   nameContainer;
 
+    /**
+     * 用于存储Bean的容器
+     * key为类的类型
+     * value为实例对象
+     */
     private final Map<Class<?>, Object> typeContainer;
 
     /** 类扫描器 */
@@ -64,11 +68,12 @@ public class DefaultBeanFactory implements BeanFactory {
     private final ProxyResolver         proxyResolver;
 
     public DefaultBeanFactory() {
-        //TODO init defaultPkgName
-        this(defaultPkgName);
+        this(ConfigFileReader.getScanPackage());
     }
 
     public DefaultBeanFactory(String pkgName) {
+        AssertUtil.assertNotBlank(pkgName, "package location cann't by empty!");
+
         nameContainer = new HashMap<String, Object>();
         typeContainer = new HashMap<Class<?>, Object>();
         scanner = new DefaultClassScanner(pkgName);

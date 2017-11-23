@@ -4,6 +4,8 @@
  */
 package cn.tauren.framework.test.aop;
 
+import java.lang.reflect.Method;
+
 import cn.tauren.framework.aop.api.ProxyInterceptor;
 import cn.tauren.framework.ioc.annotation.Bean;
 
@@ -18,12 +20,12 @@ public class ProcessTimeProxy extends ProxyInterceptor {
     private long start;
 
     @Override
-    protected void before() {
+    protected void before(Class<?> targetClass, Method method, Object[] args) {
         start = System.currentTimeMillis();
     }
 
     @Override
-    protected void after() {
+    protected void after(Class<?> targetClass, Method method, Object[] args) {
         long processTime = System.currentTimeMillis() - start;
         System.out.println("执行时间：" + processTime);
     }

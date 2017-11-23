@@ -4,6 +4,8 @@
  */
 package cn.tauren.framework.test.aop;
 
+import java.lang.reflect.Method;
+
 import cn.tauren.framework.aop.api.ProxyInterceptor;
 import cn.tauren.framework.ioc.annotation.Bean;
 
@@ -16,17 +18,17 @@ import cn.tauren.framework.ioc.annotation.Bean;
 public class LogProxy extends ProxyInterceptor {
 
     @Override
-    protected void before() {
+    protected void before(Class<?> targetClass, Method method, Object[] args) {
         System.out.println("log from before");
     }
 
     @Override
-    protected void after() {
+    protected void after(Class<?> targetClass, Method method, Object[] args) {
         System.out.println("log from after");
     }
 
     @Override
-    protected void exception(Throwable e) {
+    protected void exception(Class<?> targetClass, Method method, Object[] args, Throwable e) {
         System.out.println("log from exception");
     }
 
