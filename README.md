@@ -80,7 +80,9 @@ public class UserService {
 }
 ```
 
+为`Login`注入`UserService`
 ```java
+@Bean
 public class Login {
 
     @Inject

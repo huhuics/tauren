@@ -10,8 +10,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.apache.commons.lang3.ObjectUtils.Null;
-
 /**
  * Aop拦截
  * @author HuHui
@@ -22,8 +20,6 @@ import org.apache.commons.lang3.ObjectUtils.Null;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Intercept {
 
-    String name() default "";
-
-    Class<?> type() default Null.class;
+    Class<?>[] type();
 
 }

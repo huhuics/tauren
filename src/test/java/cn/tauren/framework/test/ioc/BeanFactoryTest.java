@@ -7,11 +7,13 @@ package cn.tauren.framework.test.ioc;
 import org.junit.Assert;
 import org.junit.Test;
 
+import cn.tauren.framework.exception.BeanException;
 import cn.tauren.framework.exception.BeanNotOfRequiredTypeException;
 import cn.tauren.framework.ioc.api.BeanFactory;
 import cn.tauren.framework.ioc.impl.DefaultBeanFactory;
 import cn.tauren.framework.test.ClassroomService;
 import cn.tauren.framework.test.StudentService;
+import cn.tauren.framework.test.UserService;
 
 /**
  * 
@@ -43,5 +45,39 @@ public class BeanFactoryTest {
     @Test(expected = BeanNotOfRequiredTypeException.class)
     public void testGetBeanByNameAndType2() {
         factory.getBean("classroomService", StudentService.class);
+    }
+
+    /**
+     * 测试多接口实现类情况
+     */
+    @Test
+    public void testGetBean() {
+        Object bean1 = factory.getBean("userServiceImpl");
+        Assert.assertNotNull(bean1);
+
+        Object bean2 = null;
+        try {
+            bean2 = factory.getBean(UserService.class);
+        } catch (BeanException e) {
+            System.out.println("获取bean2失败");
+        }
+        Assert.assertNull(bean2);
+
+        Object bean3 = null;
+        try {
+            bean3 = factory.getBean("userServiceImpl", UserService.class);
+        } catch (BeanException e) {
+            System.out.println("获取bean3失败");
+        }
+        Assert.assertNotNull(bean3);
+
+        Object bean4 = null;
+        try {
+            bean4 = factory.getBean("userServiceImpl", StudentService.class);
+        } catch (BeanException e) {
+            System.out.println("获取bean4失败");
+        }
+        Assert.assertNotNull(bean4);
+
     }
 }

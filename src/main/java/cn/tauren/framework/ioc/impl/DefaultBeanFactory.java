@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import cn.tauren.framework.aop.annotation.Intercept;
@@ -158,30 +157,26 @@ public class DefaultBeanFactory implements BeanFactory {
      * @return       代理类
      */
     private Object getProxyInstance(Class<?> clazz, Object target) {
+        Object proxyIns = target;
         Intercept interAnno = clazz.getAnnotation(Intercept.class);
-        AssertUtil.assertTrue(StringUtils.isNotBlank(interAnno.name()) || !interAnno.type().isInstance(ObjectUtils.NULL), "Intercept的name和type不能同时为空");
 
+        Class<?>[] types = interAnno.type();
+        for (Class<?> type : types) {
+            proxyIns = doGetProxyInstance(type, clazz, proxyIns);
+        }
+
+        return proxyIns;
+    }
+
+    private Object doGetProxyInstance(Class<?> interceptorClass, Class<?> targetClass, Object target) {
         Object interceptor = null;
-        if (StringUtils.isNotBlank(interAnno.name())) {
-            try {
-                interceptor = getBean(interAnno.name());
-            } catch (BeanException e) {
-            }
+
+        try {
+            interceptor = getBean(interceptorClass);
+        } catch (BeanException e) {
+            throw new NoSuchBeanException("no such bean's type is " + interceptorClass.getSimpleName());
         }
-
-        if (interceptor == null) {
-
-            try {
-                interceptor = getBean(interAnno.type());
-            } catch (BeanException e) {
-            }
-
-            if (interceptor == null) {
-                throw new NoSuchBeanException("no such bean named " + interAnno.name() + " or type is " + interAnno.type().getSimpleName());
-            }
-        }
-
-        return proxyResolver.newProxyInstance(interceptor, clazz, target);
+        return proxyResolver.newProxyInstance(interceptor, targetClass, target);
     }
 
     private void inject() {

@@ -33,8 +33,20 @@ public class CGlibProxyTest {
             }
         });
 
-        UserService proxy = (UserService) enhancer.create();
-        proxy.getId(112);
+        final UserService proxy1 = (UserService) enhancer.create();
+        proxy1.getId(112);
+
+        //嵌套代理
+        UserService reProxy = (UserService) Enhancer.create(UserService.class, new InvocationHandler() {
+
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                System.out.println("cglib reproxy");
+                return method.invoke(proxy1, args);
+            }
+        });
+
+        reProxy.getId(222);
 
     }
 
@@ -63,4 +75,35 @@ public class CGlibProxyTest {
         UserServiceImpl proxy1 = ProxyUtil.newProxyInstance(UserServiceImpl.class, new UserServiceImpl());
         proxy1.getId(222);
     }
+
+    @Test
+    public void testEnhancerCreate1() {
+        final UserService uService = new UserServiceImpl();
+        Class<?>[] clazzArr = { UserService.class, StudentService.class };
+        StudentService proxy = (StudentService) Enhancer.create(UserServiceImpl.class, clazzArr, new InvocationHandler() {
+
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                return method.invoke(uService, args);
+            }
+        });
+
+        proxy.study();
+
+    }
+
+    @Test
+    public void testEnhancerCreate2() {
+        final UserService uService = new UserServiceImpl();
+        UserServiceImpl proxy = (UserServiceImpl) Enhancer.create(UserServiceImpl.class, new InvocationHandler() {
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                return method.invoke(uService, args);
+            }
+        });
+
+        proxy.study();
+        proxy.getId(110);
+    }
+
 }
