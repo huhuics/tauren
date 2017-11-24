@@ -15,14 +15,13 @@ import java.util.Properties;
  */
 public class ConfigFileReader {
 
-    private static Properties properties;
-
-    static {
-        properties = getProperties("tauren.config");
-    }
-
-    public static String getScanPackage() {
-        return properties.getProperty(Constants.SCAN_PACKAGE);
+    /**
+     * 获取用户自定义配置文件中包扫码路径
+     * @param configFile   用户自定义包
+     * @return
+     */
+    public static String getScanPackage(String configFile) {
+        return getProperties(configFile).getProperty(Constants.SCAN_PACKAGE);
     }
 
     private static Properties getProperties(String configFile) {

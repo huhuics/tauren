@@ -14,10 +14,8 @@ import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import cn.tauren.framework.ConfigFileReader;
 import cn.tauren.framework.aop.annotation.Intercept;
 import cn.tauren.framework.aop.api.ProxyResolver;
-import cn.tauren.framework.aop.impl.ProxyResolverImpl;
 import cn.tauren.framework.exception.BeanCreationException;
 import cn.tauren.framework.exception.BeanException;
 import cn.tauren.framework.exception.BeanNotOfRequiredTypeException;
@@ -69,17 +67,13 @@ public class DefaultBeanFactory implements BeanFactory {
     /** 代理类生成器 */
     private final ProxyResolver         proxyResolver;
 
-    public DefaultBeanFactory() {
-        this(ConfigFileReader.getScanPackage());
-    }
-
-    public DefaultBeanFactory(String pkgName) {
+    public DefaultBeanFactory(String pkgName, ClassScanner scanner, ProxyResolver proxyResolver) {
         AssertUtil.assertNotBlank(pkgName, "package location cann't by empty!");
 
         nameContainer = new HashMap<String, Object>();
         typeContainer = new HashMap<Class<?>, Object>();
-        scanner = new DefaultClassScanner(pkgName);
-        proxyResolver = new ProxyResolverImpl();
+        this.scanner = scanner;
+        this.proxyResolver = proxyResolver;
 
         //初始化容器
         initContainer();

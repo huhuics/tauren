@@ -7,8 +7,8 @@ package cn.tauren.framework.test.aop;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.tauren.framework.ioc.api.BeanFactory;
-import cn.tauren.framework.ioc.impl.DefaultBeanFactory;
+import cn.tauren.framework.context.ApplicationContext;
+import cn.tauren.framework.context.DefaultApplicationContext;
 import cn.tauren.framework.test.UserService;
 
 /**
@@ -18,11 +18,11 @@ import cn.tauren.framework.test.UserService;
  */
 public class ProxyResolverTest {
 
-    private BeanFactory factory;
+    private ApplicationContext factory;
 
     @Before
     public void init() {
-        factory = new DefaultBeanFactory();
+        factory = new DefaultApplicationContext();
     }
 
     @Test

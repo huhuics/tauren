@@ -11,9 +11,12 @@ package cn.tauren.framework;
  */
 public interface Constants {
 
-    static final String FILE_DOT     = ".";
+    static final String FILE_DOT            = ".";
 
-    /** 工程扫码包路径 */
-    static final String SCAN_PACKAGE = "scan.package";
+    /** 默认配置文件名 */
+    static final String DEFAULT_CONFIG_NAME = "tauren.config";
+
+    /** 工程扫码包路径字段 */
+    static final String SCAN_PACKAGE        = "scan.package";
 
 }

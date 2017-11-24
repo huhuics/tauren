@@ -7,8 +7,8 @@ package cn.tauren.framework.test.util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cn.tauren.framework.ioc.api.BeanFactory;
-import cn.tauren.framework.ioc.impl.DefaultBeanFactory;
+import cn.tauren.framework.context.ApplicationContext;
+import cn.tauren.framework.context.DefaultApplicationContext;
 import cn.tauren.framework.test.StudentService;
 
 /**
@@ -20,7 +20,7 @@ public class ConfigFileReaderTest {
 
     @Test
     public void test() {
-        BeanFactory factory = new DefaultBeanFactory();
+        ApplicationContext factory = new DefaultApplicationContext();
         StudentService service = factory.getBean("studentServiceImpl", StudentService.class);
         Assert.assertNotNull(service);
         service.study();

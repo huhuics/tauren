@@ -7,10 +7,10 @@ package cn.tauren.framework.test.ioc;
 import org.junit.Assert;
 import org.junit.Test;
 
+import cn.tauren.framework.context.ApplicationContext;
+import cn.tauren.framework.context.DefaultApplicationContext;
 import cn.tauren.framework.exception.BeanException;
 import cn.tauren.framework.exception.BeanNotOfRequiredTypeException;
-import cn.tauren.framework.ioc.api.BeanFactory;
-import cn.tauren.framework.ioc.impl.DefaultBeanFactory;
 import cn.tauren.framework.test.AbstractService;
 import cn.tauren.framework.test.ClassroomService;
 import cn.tauren.framework.test.StudentService;
@@ -23,36 +23,36 @@ import cn.tauren.framework.test.UserService;
  */
 public class BeanFactoryTest {
 
-    private BeanFactory factory = new DefaultBeanFactory();
+    private ApplicationContext context = new DefaultApplicationContext();
 
     @Test
     public void testGetBeanByName() {
-        Object bean = factory.getBean("classroomService");
+        Object bean = context.getBean("classroomService");
         Assert.assertNotNull(bean);
     }
 
     @Test
     public void testGetBeanByType() {
-        Object bean2 = factory.getBean(ClassroomService.class);
+        Object bean2 = context.getBean(ClassroomService.class);
         Assert.assertNotNull(bean2);
     }
 
     @Test
     public void testGetBeanByType2() {
-        StudentService bean = factory.getBean(StudentService.class);
+        StudentService bean = context.getBean(StudentService.class);
         Assert.assertNotNull(bean);
         bean.study();
     }
 
     @Test
     public void testGetBeanByNameAndType() {
-        ClassroomService bean3 = factory.getBean("classroomService", ClassroomService.class);
+        ClassroomService bean3 = context.getBean("classroomService", ClassroomService.class);
         Assert.assertNotNull(bean3);
     }
 
     @Test(expected = BeanNotOfRequiredTypeException.class)
     public void testGetBeanByNameAndType2() {
-        factory.getBean("classroomService", StudentService.class);
+        context.getBean("classroomService", StudentService.class);
     }
 
     /**
@@ -60,20 +60,20 @@ public class BeanFactoryTest {
      */
     @Test
     public void testGetBean() {
-        Object bean1 = factory.getBean("userServiceImpl");
+        Object bean1 = context.getBean("userServiceImpl");
         Assert.assertNotNull(bean1);
 
         Object bean2 = null;
         try {
-            bean2 = factory.getBean(UserService.class);
+            bean2 = context.getBean(UserService.class);
         } catch (BeanException e) {
             System.out.println("获取bean2失败");
         }
-        Assert.assertNull(bean2);
+        Assert.assertNotNull(bean2);
 
         Object bean3 = null;
         try {
-            bean3 = factory.getBean("userServiceImpl", UserService.class);
+            bean3 = context.getBean("userServiceImpl", UserService.class);
         } catch (BeanException e) {
             System.out.println("获取bean3失败");
         }
@@ -81,7 +81,7 @@ public class BeanFactoryTest {
 
         Object bean4 = null;
         try {
-            bean4 = factory.getBean("userServiceImpl", StudentService.class);
+            bean4 = context.getBean("userServiceImpl", StudentService.class);
         } catch (BeanException e) {
             System.out.println("获取bean4失败");
         }
@@ -91,7 +91,7 @@ public class BeanFactoryTest {
 
     @Test
     public void testAbstractClass() {
-        AbstractService bean = factory.getBean(AbstractService.class);
+        AbstractService bean = context.getBean(AbstractService.class);
         bean.service();
     }
 }
