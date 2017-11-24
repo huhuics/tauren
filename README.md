@@ -42,11 +42,11 @@ IoC实现的类图如上图所示。下面分别说明各个接口和类的功�
 
 ### 3.1.1 ClassScanner
 
-    [ClassScanner](https://github.com/huhuics/tauren/blob/master/src/main/java/cn/tauren/framework/ioc/api/ClassScanner.java)是类扫描器，提供了三种方法，都是根据条件，递归扫描客户端文件夹所有的类。但是*getClassesByAnnotation*和*getClassesBySuper*方法不会返回**接口**和**抽象类**
+[ClassScanner](https://github.com/huhuics/tauren/blob/master/src/main/java/cn/tauren/framework/ioc/api/ClassScanner.java)是类扫描器，提供了三种方法，都是根据条件，递归扫描客户端文件夹所有的类。但是*getClassesByAnnotation*和*getClassesBySuper*方法不会返回**接口**和**抽象类**
     
 ### 3.1.2 BeanFactory
 
-    [Bean工厂](https://github.com/huhuics/tauren/blob/master/src/main/java/cn/tauren/framework/ioc/api/BeanFactory.java)中首先通过*ClassScanner*获取所有带有 *@Bean* 注解的类，被 *@Bean* 注解的类说明需要被IoC容器接管。通过`Class.newInstance()`方法实例化类，并分别放入*nameContainer*和*typeContainer*这两个Map中。IoC容器在具体实现起来是通过Map来实现的。
+[Bean工厂](https://github.com/huhuics/tauren/blob/master/src/main/java/cn/tauren/framework/ioc/api/BeanFactory.java)中首先通过*ClassScanner*获取所有带有 *@Bean* 注解的类，被 *@Bean* 注解的类说明需要被IoC容器接管。通过`Class.newInstance()`方法实例化类，并分别放入*nameContainer*和*typeContainer*这两个Map中。IoC容器在具体实现起来是通过Map来实现的。
     
 ### 3.1.3 BeanInjector
 
@@ -65,7 +65,7 @@ IoC实现的类图如上图所示。下面分别说明各个接口和类的功�
     Assert.assertNotNull(bean1);
 
     Object bean2 = factory.getBean(UserService.class);
-    Assert.assertNull(bean2); // bean2 is null
+    Assert.assertNotNull(bean2);
 
     Object bean3 = factory.getBean("userServiceImpl", UserService.class);
     Assert.assertNotNull(bean3);
