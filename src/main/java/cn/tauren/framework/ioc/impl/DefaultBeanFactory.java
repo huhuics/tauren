@@ -4,18 +4,18 @@
  */
 package cn.tauren.framework.ioc.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import cn.tauren.framework.aop.annotation.Intercept;
 import cn.tauren.framework.aop.api.ProxyResolver;
-import cn.tauren.framework.aop.impl.ProxyResolverImpl;
 import cn.tauren.framework.exception.BeanCreationException;
 import cn.tauren.framework.exception.BeanException;
 import cn.tauren.framework.exception.BeanNotOfRequiredTypeException;
@@ -44,8 +44,6 @@ import cn.tauren.framework.util.ClassUtil;
  */
 public class DefaultBeanFactory implements BeanFactory {
 
-    private static String               defaultPkgName;
-
     /**
      * 存放类的实例的Map,即用于存储Bean的容器
      * key为类的name
@@ -53,6 +51,11 @@ public class DefaultBeanFactory implements BeanFactory {
      */
     private final Map<String, Object>   nameContainer;
 
+    /**
+     * 用于存储Bean的容器
+     * key为类的类型
+     * value为实例对象
+     */
     private final Map<Class<?>, Object> typeContainer;
 
     /** 类扫描器 */
@@ -64,20 +67,17 @@ public class DefaultBeanFactory implements BeanFactory {
     /** 代理类生成器 */
     private final ProxyResolver         proxyResolver;
 
-    public DefaultBeanFactory() {
-        //TODO init defaultPkgName
-        this(defaultPkgName);
-    }
+    public DefaultBeanFactory(String pkgName, ClassScanner scanner, ProxyResolver proxyResolver) {
+        AssertUtil.assertNotBlank(pkgName, "package location cann't by empty!");
 
-    public DefaultBeanFactory(String pkgName) {
         nameContainer = new HashMap<String, Object>();
         typeContainer = new HashMap<Class<?>, Object>();
-        scanner = new DefaultClassScanner(pkgName);
-        injector = new DefaultBeanInjector(this, scanner);
-        proxyResolver = new ProxyResolverImpl();
+        this.scanner = scanner;
+        this.proxyResolver = proxyResolver;
 
         //初始化容器
         initContainer();
+        injector = new DefaultBeanInjector(this, scanner);
 
         //注入类
         inject();
@@ -85,6 +85,8 @@ public class DefaultBeanFactory implements BeanFactory {
 
     @Override
     public Object getBean(String name) throws BeanException {
+        AssertUtil.assertNotBlank(name, "bean name can not by empty");
+
         Object object = nameContainer.get(name);
         if (object == null) {
             throw new NoSuchBeanException("no such bean named " + name);
@@ -93,17 +95,38 @@ public class DefaultBeanFactory implements BeanFactory {
     }
 
     @Override
-    public Object getBean(Class<?> requiredType) throws BeanException {
-        Object object = typeContainer.get(requiredType);
-        if (object == null) {
-            throw new NoSuchBeanException("no such bean's type is " + requiredType.getSimpleName());
+    @SuppressWarnings("unchecked")
+    public <T> T getBean(Class<T> requiredType) throws BeanException {
+        AssertUtil.assertNotNull(requiredType, "bean type can not be null");
+
+        Object object = null;
+        String errMsg = "no such bean's type is " + requiredType.getSimpleName();
+
+        //判断requiredType是接口/抽象类
+        if (ClassUtil.isInterfaceOrAbstract(requiredType)) {
+            List<Object> beans = getBeansByInterface(requiredType);
+
+            AssertUtil.assertNotBlank(beans, errMsg);
+            AssertUtil.assertTrue(beans.size() <= 1, requiredType.getName() + "接口有多个实现类,请使用名称注入方式");
+
+            object = beans.get(0);
+        } else {
+            object = typeContainer.get(requiredType);
         }
-        return object;
+
+        if (object == null) {
+            throw new NoSuchBeanException(errMsg);
+        }
+
+        return (T) object;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getBean(String name, Class<T> requiredType) throws BeanException {
+        AssertUtil.assertNotBlank(name, "bean name can not by empty");
+        AssertUtil.assertNotNull(requiredType, "bean type can not be null");
+
         Object object = nameContainer.get(name);
         if (object == null) {
             throw new NoSuchBeanException("no such bean named " + name);
@@ -158,30 +181,43 @@ public class DefaultBeanFactory implements BeanFactory {
      * @return       代理类
      */
     private Object getProxyInstance(Class<?> clazz, Object target) {
+        Object proxyIns = target;
         Intercept interAnno = clazz.getAnnotation(Intercept.class);
-        AssertUtil.assertTrue(StringUtils.isNotBlank(interAnno.name()) || !interAnno.type().isInstance(ObjectUtils.NULL), "Intercept的name和type不能同时为空");
 
+        Class<?>[] types = interAnno.type();
+        for (Class<?> type : types) {
+            proxyIns = doGetProxyInstance(type, clazz, proxyIns);
+        }
+
+        return proxyIns;
+    }
+
+    private Object doGetProxyInstance(Class<?> interceptorClass, Class<?> targetClass, Object target) {
         Object interceptor = null;
-        if (StringUtils.isNotBlank(interAnno.name())) {
-            try {
-                interceptor = getBean(interAnno.name());
-            } catch (BeanException e) {
+
+        try {
+            interceptor = getBean(interceptorClass);
+        } catch (BeanException e) {
+            throw new NoSuchBeanException("no such bean's type is " + interceptorClass.getSimpleName());
+        }
+        return proxyResolver.newProxyInstance(interceptor, targetClass, target);
+    }
+
+    /**
+     * 通过接口查找bean
+     * @param requiredType 接口类型
+     * @return
+     */
+    private List<Object> getBeansByInterface(Class<?> requiredType) {
+        List<Object> objects = new ArrayList<Object>();
+        Iterator<Class<?>> iterator = typeContainer.keySet().iterator();
+        while (iterator.hasNext()) {
+            Class<?> key = iterator.next();
+            if (requiredType.isAssignableFrom(key)) {
+                objects.add(typeContainer.get(key));
             }
         }
-
-        if (interceptor == null) {
-
-            try {
-                interceptor = getBean(interAnno.type());
-            } catch (BeanException e) {
-            }
-
-            if (interceptor == null) {
-                throw new NoSuchBeanException("no such bean named " + interAnno.name() + " or type is " + interAnno.type().getSimpleName());
-            }
-        }
-
-        return proxyResolver.newProxyInstance(interceptor, clazz, target);
+        return objects;
     }
 
     private void inject() {

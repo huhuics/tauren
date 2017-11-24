@@ -6,9 +6,16 @@
 - [二. 约定](#二-约定)
 - [三. 实现方式](#三-实现方式)
     - [3.1 IoC(Inversion of Control)](#31-iocinversion-of-control)
+        - [3.1.1 ClassScanner](#311-classscanner)
+        - [3.1.2 BeanFactory](#312-beanfactory)
+        - [3.1.3 BeanInjector](#313-beaninjector)
     - [3.2 循环依赖问题](#32-循环依赖问题)
+        - [3.2.1 什么是循环依赖？](#321-什么是循环依赖)
+        - [3.2.2 Spring是如何解决循环依赖？](#322-spring是如何解决循环依赖)
+        - [3.2.3 Tauren是如何解决循环依赖？](#323-tauren是如何解决循环依赖)
 - [四. 使用方式](#四-使用方式)
     - [4.1 IoC使用](#41-ioc使用)
+    - [4.2 AOP使用](#42-aop使用)
    
 
 
@@ -33,25 +40,46 @@
 
 IoC实现的类图如上图所示。下面分别说明各个接口和类的功能。
 
-- **ClassScanner**
+### 3.1.1 ClassScanner
 
-    [ClassScanner](https://github.com/huhuics/tauren/blob/master/src/main/java/cn/tauren/framework/ioc/api/ClassScanner.java)是类扫描器，提供了三种方法，都是根据条件，递归扫描客户端文件夹所有的类。但是*getClassesByAnnotation*和*getClassesBySuper*方法不会返回**接口**和**抽象类**
+[ClassScanner](https://github.com/huhuics/tauren/blob/master/src/main/java/cn/tauren/framework/ioc/api/ClassScanner.java)是类扫描器，提供了三种方法，都是根据条件，递归扫描客户端文件夹所有的类。但是*getClassesByAnnotation*和*getClassesBySuper*方法不会返回**接口**和**抽象类**
     
-- **BeanFactory**
+### 3.1.2 BeanFactory
 
-    [Bean工厂](https://github.com/huhuics/tauren/blob/master/src/main/java/cn/tauren/framework/ioc/api/BeanFactory.java)中首先通过*ClassScanner*获取所有带有 *@Bean* 注解的类，被 *@Bean* 注解的类说明需要被IoC容器接管。通过`Class.newInstance()`方法实例化类，并分别放入*nameContainer*和*typeContainer*这两个Map中。IoC容器在具体实现起来是通过Map来实现的。
+[Bean工厂](https://github.com/huhuics/tauren/blob/master/src/main/java/cn/tauren/framework/ioc/api/BeanFactory.java)中首先通过*ClassScanner*获取所有带有 *@Bean* 注解的类，被 *@Bean* 注解的类说明需要被IoC容器接管。通过`Class.newInstance()`方法实例化类，并分别放入*nameContainer*和*typeContainer*这两个Map中。IoC容器在具体实现起来是通过Map来实现的。
     
-- **BeanInjector**
+### 3.1.3 BeanInjector
 
     [Bean注入器](https://github.com/huhuics/tauren/blob/master/src/main/java/cn/tauren/framework/ioc/api/BeanInjector.java)完成的工作是遍历*BeanFactory*中实例化的类，再依次遍历各个类的字段，找出被 *@Inject* 注解的字段，默认通过名称的方式注入对象；如果通过名称注入失败，则改用通过类型注入的方式。
     
-    如果一个接口有多个实现类，则在使用 *@Bean* 标注时必须填入类的名称，在注入的地方 *@Inject* 也必须使用名称，即这种情况必须使用**名称注入方式**
+- **几点说明**
+
+    - 如果一个接口有多个实现类，则在使用 *@Bean* 标注时必须填入类的名称，在注入的地方 *@Inject* 也必须使用名称，即这种情况必须使用**名称注入方式**
+    
+    - 如果一个类实现了多个接口，在使用`BeanFactory`获取Bean时，存在以下几种情况:
+    
+```java
+    //假设 UserServiceImpl implements UserService, StudentService
+
+    Object bean1 = factory.getBean("userServiceImpl");
+    Assert.assertNotNull(bean1);
+
+    Object bean2 = factory.getBean(UserService.class);
+    Assert.assertNotNull(bean2);
+
+    Object bean3 = factory.getBean("userServiceImpl", UserService.class);
+    Assert.assertNotNull(bean3);
+
+    Object bean4 = factory.getBean("userServiceImpl", StudentService.class);
+    Assert.assertNotNull(bean4);
+    
+```
     
 ## 3.2 循环依赖问题
 ### 3.2.1 什么是循环依赖？
 循环依赖就是循环引用，两个或多个Bean相互之间持有对方的引用，比如A类引用B类，B类引用C类，C类又引用A类，它们最终反映为一个环。
     
-### 3.2.2 Spirng是如何解决循环依赖？
+### 3.2.2 Spring是如何解决循环依赖？
 Spring容器循环依赖包括构造器循环依赖和setter循环依赖。
     
 **构造器循环依赖**表示通过构造器注入构成循环依赖，此依赖是无法解决的，只能抛出 *BeanCurrentlyInCreationException* 异常表示循环依赖。在创建A类时，构造器需要B类，那将去创建B类，在创建B类时又发现需要C类，那将去创建C类，最终在创建C类又发现需要A类，从而形成一个环，无法创建。
@@ -60,7 +88,7 @@ Spring容器将每一个正在创建的Bean标识符放在一个“当前创建B
     
 **setter循环依赖**表示通过setter注入方式构成的循环依赖。对于setter循环依赖，spring是通过先无参构造方法创建一个实例提前把A的引用暴露出来并缓存，并且只能解决单例作用域的Bean循环依赖，而对于`prototype`作用域的Bean，由于Spring不缓存，无法提前暴露一个创建中的Bean，故不能解决。
 
-### 3.2.3 Tauren是如何解决循环依赖
+### 3.2.3 Tauren是如何解决循环依赖？
 
 对于构造器循环依赖，tauren同样无法解决，因为这本身就是无解的。对于setter循环依赖，由于tauren只有注解模式，没有xml模式，且在注入字段表示的对象时，该字段所在的类已经被实例化了，因此setter循环依赖在tauren中并不存在。
 
@@ -80,7 +108,9 @@ public class UserService {
 }
 ```
 
+为`Login`注入`UserService`
 ```java
+@Bean
 public class Login {
 
     @Inject

@@ -27,16 +27,16 @@ public interface BeanFactory {
 
     /**
      * 通过类型获取类
-     * @param requiredType    期望返回的类型
+     * @param requiredType    期望返回的类型(可以是接口类型)
      * @return                类的实例
      * @throws BeanException 如果该类不存在
      */
-    Object getBean(Class<?> requiredType) throws BeanException;
+    <T> T getBean(Class<T> requiredType) throws BeanException;
 
     /**
      * 通过类名和类型获取类
      * @param name            类的名称
-     * @param requiredType    期望返回的类型
+     * @param requiredType    期望返回的类型(可以是接口类型)
      * @return                类的实例
      * @throws NoSuchBeanException  如果该类不存在
      * @throws BeanNotOfRequiredTypeException  如果传入的类型与实际类型不一致

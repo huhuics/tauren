@@ -8,8 +8,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.tauren.framework.ioc.api.BeanFactory;
-import cn.tauren.framework.ioc.impl.DefaultBeanFactory;
+import cn.tauren.framework.context.ApplicationContext;
+import cn.tauren.framework.context.DefaultApplicationContext;
 import cn.tauren.framework.test.StudentService;
 import cn.tauren.framework.test.TeacherService;
 import cn.tauren.framework.test.UserService;
@@ -22,11 +22,11 @@ import cn.tauren.framework.test.UserServiceImpl;
  */
 public class BeanInjectorTest {
 
-    private BeanFactory factory;
+    private ApplicationContext context;
 
     @Before
     public void init() {
-        factory = new DefaultBeanFactory("cn.tauren.framework.test");
+        context = new DefaultApplicationContext();
     }
 
     @Test
@@ -35,15 +35,15 @@ public class BeanInjectorTest {
 
     @Test
     public void testReference() {
-        TeacherService tService = factory.getBean("teacherServiceImpl", TeacherService.class);
-        StudentService sService = factory.getBean("studentServiceImpl", StudentService.class);
+        TeacherService tService = context.getBean("teacherServiceImpl", TeacherService.class);
+        StudentService sService = context.getBean("studentServiceImpl", StudentService.class);
         Assert.assertNotNull(tService);
         Assert.assertNotNull(sService);
     }
 
     @Test
     public void testProxy() {
-        UserService userService = factory.getBean("userServiceImpl", UserServiceImpl.class);
+        UserService userService = context.getBean("userServiceImpl", UserServiceImpl.class);
         userService.getId(112233);
     }
 

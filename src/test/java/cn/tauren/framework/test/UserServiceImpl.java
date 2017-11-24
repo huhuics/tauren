@@ -7,6 +7,7 @@ package cn.tauren.framework.test;
 import cn.tauren.framework.aop.annotation.Intercept;
 import cn.tauren.framework.ioc.annotation.Bean;
 import cn.tauren.framework.test.aop.LogProxy;
+import cn.tauren.framework.test.aop.ProcessTimeProxy;
 
 /**
  * 
@@ -14,7 +15,7 @@ import cn.tauren.framework.test.aop.LogProxy;
  * @version $Id: UserServiceImpl.java, v 0.1 2017年11月21日 下午7:27:48 HuHui Exp $
  */
 @Bean
-@Intercept(type = LogProxy.class)
+@Intercept(type = { LogProxy.class, ProcessTimeProxy.class })
 public class UserServiceImpl implements UserService {
 
     @Override
@@ -26,6 +27,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String getName(String name) {
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+        }
         System.out.println("user's name is " + name);
         return name;
     }

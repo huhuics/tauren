@@ -12,24 +12,22 @@ import cn.tauren.framework.ioc.annotation.Bean;
 /**
  * 
  * @author HuHui
- * @version $Id: LogProxy.java, v 0.1 2017年11月22日 上午10:07:40 HuHui Exp $
+ * @version $Id: ProcessTimeProxy.java, v 0.1 2017年11月23日 下午12:17:43 HuHui Exp $
  */
 @Bean
-public class LogProxy extends ProxyInterceptor {
+public class ProcessTimeProxy extends ProxyInterceptor {
+
+    private long start;
 
     @Override
     protected void before(Class<?> targetClass, Method method, Object[] args) {
-        System.out.println("log from before");
+        start = System.currentTimeMillis();
     }
 
     @Override
     protected void after(Class<?> targetClass, Method method, Object[] args) {
-        System.out.println("log from after");
-    }
-
-    @Override
-    protected void exception(Class<?> targetClass, Method method, Object[] args, Throwable e) {
-        System.out.println("log from exception");
+        long processTime = System.currentTimeMillis() - start;
+        System.out.println(targetClass.getSimpleName() + "." + method.getName() + "执行时间：" + processTime);
     }
 
 }
