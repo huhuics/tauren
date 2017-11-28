@@ -5,7 +5,6 @@
 package cn.tauren.framework.ioc.api;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -23,22 +22,16 @@ import cn.tauren.framework.util.AssertUtil;
  */
 public abstract class BeanResolver {
 
-    private BeanFactory           beanFactory;
-
-    private Map<String, Object>   nameContainer;
-
-    private Map<Class<?>, Object> typeContainer;
+    private BeanFactory   beanFactory;
 
     /** 代理类生成器 */
-    private ProxyResolver         proxyResolver;
+    private ProxyResolver proxyResolver;
 
     public BeanResolver() {
     }
 
-    public BeanResolver(BeanFactory beanFactory, Map<String, Object> nameContainer, Map<Class<?>, Object> typeContainer, ProxyResolver proxyResolver) {
+    public BeanResolver(BeanFactory beanFactory, ProxyResolver proxyResolver) {
         this.beanFactory = beanFactory;
-        this.nameContainer = nameContainer;
-        this.typeContainer = typeContainer;
         this.proxyResolver = proxyResolver;
     }
 
@@ -60,7 +53,7 @@ public abstract class BeanResolver {
         for (Class<?> clazz : classes) {
             String beanName = getBeanName(clazz);
 
-            AssertUtil.assertTrue(!nameContainer.containsKey(beanName), "类名重复");
+            AssertUtil.assertTrue(!beanFactory.containsKey(beanName), "类名重复");
 
             try {
                 Object instance = clazz.newInstance();
@@ -70,8 +63,7 @@ public abstract class BeanResolver {
                     instance = getProxyInstance(clazz, instance);
                 }
 
-                nameContainer.put(beanName, instance);
-                typeContainer.put(clazz, instance);
+                beanFactory.putClass(clazz, beanName, instance);
             } catch (Exception e) {
                 throw new BeanCreationException("初始化类失败", e);
             }
@@ -109,14 +101,6 @@ public abstract class BeanResolver {
 
     public void setBeanFactory(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
-    }
-
-    public void setNameContainer(Map<String, Object> nameContainer) {
-        this.nameContainer = nameContainer;
-    }
-
-    public void setTypeContainer(Map<Class<?>, Object> typeContainer) {
-        this.typeContainer = typeContainer;
     }
 
     public void setProxyResolver(ProxyResolver proxyResolver) {

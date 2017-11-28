@@ -15,7 +15,7 @@ import cn.tauren.framework.exception.NoSuchBeanException;
  * @author HuHui
  * @version $Id: BeanFactory.java, v 0.1 2017年11月20日 下午7:59:25 HuHui Exp $
  */
-public interface BeanFactory {
+public interface BeanFactory extends Container {
 
     /**
      * 通过类的名称获取对象实例

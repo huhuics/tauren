@@ -71,8 +71,8 @@ public class DefaultBeanFactory implements BeanFactory {
         nameContainer = new HashMap<String, Object>();
         typeContainer = new HashMap<Class<?>, Object>();
         this.scanner = scanner;
-        beanAnnoResolver = new BeanAnnoResolver(this, nameContainer, typeContainer, proxyResolver);
-        contrAnnoResolver = new ControllerAnnoResolver(this, nameContainer, typeContainer, proxyResolver);
+        beanAnnoResolver = new BeanAnnoResolver(this, proxyResolver);
+        contrAnnoResolver = new ControllerAnnoResolver(this, proxyResolver);
 
         //初始化容器
         initContainer();
@@ -141,6 +141,17 @@ public class DefaultBeanFactory implements BeanFactory {
     @Override
     public Collection<Object> getBeans() {
         return nameContainer.values();
+    }
+
+    @Override
+    public void putClass(Class<?> clazz, String name, Object instance) {
+        nameContainer.put(name, instance);
+        typeContainer.put(clazz, instance);
+    }
+
+    @Override
+    public boolean containsKey(String name) {
+        return nameContainer.containsKey(name);
     }
 
     private void initContainer() {

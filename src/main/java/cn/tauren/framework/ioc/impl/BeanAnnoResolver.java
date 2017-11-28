@@ -4,8 +4,6 @@
  */
 package cn.tauren.framework.ioc.impl;
 
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 
 import cn.tauren.framework.aop.api.ProxyResolver;
@@ -25,8 +23,8 @@ public class BeanAnnoResolver extends BeanResolver {
         super();
     }
 
-    public BeanAnnoResolver(BeanFactory beanFactory, Map<String, Object> nameContainer, Map<Class<?>, Object> typeContainer, ProxyResolver proxyResolver) {
-        super(beanFactory, nameContainer, typeContainer, proxyResolver);
+    public BeanAnnoResolver(BeanFactory beanFactory, ProxyResolver proxyResolver) {
+        super(beanFactory, proxyResolver);
     }
 
     @Override

@@ -66,4 +66,14 @@ public class DefaultApplicationContext implements ApplicationContext {
         return factory.getBeans();
     }
 
+    @Override
+    public void putClass(Class<?> clazz, String name, Object instance) {
+        factory.putClass(clazz, name, instance);
+    }
+
+    @Override
+    public boolean containsKey(String name) {
+        return factory.containsKey(name);
+    }
+
 }
