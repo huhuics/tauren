@@ -5,6 +5,7 @@
 package cn.tauren.framework.util;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import cn.tauren.framework.Constants;
 import cn.tauren.framework.enums.RequestMethod;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * Web工具类
@@ -68,6 +71,19 @@ public class WebUtil {
      */
     public static void redirect(String path, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.sendRedirect(request.getContextPath() + "/" + path);
+    }
+
+    /**
+     * 向客户端输出json字符串
+     * @param obj   要转为json的对象
+     */
+    public static void writeJson(Object obj, HttpServletResponse response) throws IOException {
+        response.setContentType("text/plain;charset=" + Constants.UTF8);
+        response.setCharacterEncoding(Constants.UTF8);
+
+        PrintWriter writer = response.getWriter();
+        writer.write(JSON.toJSONString(obj));
+        writer.flush();
     }
 
 }

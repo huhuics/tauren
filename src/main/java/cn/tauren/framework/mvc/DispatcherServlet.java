@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.tauren.framework.Constants;
+import cn.tauren.framework.enums.ResponseMethod;
 import cn.tauren.framework.util.ClassUtil;
 import cn.tauren.framework.util.WebUtil;
 
@@ -40,6 +41,7 @@ public class DispatcherServlet extends HttpServlet {
         String requestPath = WebUtil.getRequestPath(request);
         logger.info("request path={}", requestPath);
 
+        //跳转到首页
         if (StringUtils.equals(requestPath, "/")) {
             WebUtil.redirect(Constants.INDEX, request, response);
             return;
@@ -54,17 +56,25 @@ public class DispatcherServlet extends HttpServlet {
             return;
         }
 
-        String result = invoke(action, request);
-
-        WebUtil.forward(result, request, response);
+        try {
+            invoke(action, request, response);
+        } catch (Exception e) {
+            logger.error("", e);
+            WebUtil.writeError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "服务器异常");
+        }
 
     }
 
     /**
      * 调用Controller方法
      */
-    private String invoke(Action action, HttpServletRequest request) {
-        return (String) ClassUtil.invoke(action.getInstance(), action.getMethod(), new Object[] { request });
+    private void invoke(Action action, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Object ret = ClassUtil.invoke(action.getInstance(), action.getMethod(), new Object[] { request });
+        if (action.getResponseMethod() == ResponseMethod.HTML) {
+            WebUtil.forward((String) ret, request, response);
+        } else if (action.getResponseMethod() == ResponseMethod.JSON) {
+            WebUtil.writeJson(ret, response);
+        }
     }
 
 }

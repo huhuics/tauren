@@ -15,7 +15,7 @@ import cn.tauren.framework.enums.ResponseMethod;
  */
 public class Action {
 
-    /** 实例 */
+    /** Controller实例 */
     private Object         instance;
 
     /** 方法 */
