@@ -19,4 +19,16 @@ public interface Constants {
     /** 工程扫码包路径字段 */
     static final String SCAN_PACKAGE        = "scan.package";
 
+    /** 字符编码 */
+    static final String UTF8                = "UTF-8";
+
+    /** jsp目录前缀 */
+    static final String PREFIX_JSP_PATH     = "/WEB-INF/jsp/";
+
+    /** jsp文件后缀 */
+    static final String SUFFIX_JSP          = ".jsp";
+
+    /** 主页 */
+    static final String INDEX               = "index.jsp";
+
 }

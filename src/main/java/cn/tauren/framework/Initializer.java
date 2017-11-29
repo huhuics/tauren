@@ -4,8 +4,10 @@
  */
 package cn.tauren.framework;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.ServletRegistration;
 import javax.servlet.annotation.WebListener;
 
 import org.slf4j.Logger;
@@ -27,12 +29,23 @@ public class Initializer implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         logger.info("Tauren is init...");
         new DefaultApplicationContext();
+        registeJspServlet(sce.getServletContext());
         logger.info("Tauren init success!");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         logger.info("Tauren destroied");
+    }
+
+    /**
+     * 添加jsp映射
+     */
+    private void registeJspServlet(ServletContext context) {
+        ServletRegistration jspServlet = context.getServletRegistration("jsp");
+        jspServlet.addMapping("/index.jsp");
+        String jspPath = Constants.PREFIX_JSP_PATH;
+        jspServlet.addMapping(jspPath + "*");
     }
 
 }

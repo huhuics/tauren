@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import cn.tauren.framework.enums.RequestMethod;
 import cn.tauren.framework.mvc.annotation.RequestMapping;
-import cn.tauren.framework.util.ActionUtil;
+import cn.tauren.framework.util.WebUtil;
 import cn.tauren.framework.util.AssertUtil;
 
 /**
@@ -53,7 +53,7 @@ public class DefaultActionResolver {
         if (value.endsWith(URI_SUFFIX)) {
             value.substring(0, value.length() - 1);
         }
-        String actionKey = ActionUtil.getActionKey(method, value);
+        String actionKey = WebUtil.getActionKey(method, value);
 
         AssertUtil.assertTrue(!actionMap.containsKey(actionKey), "request mapping value [" + value + "] has already exists!");
 
