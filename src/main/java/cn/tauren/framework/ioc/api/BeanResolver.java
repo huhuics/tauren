@@ -22,7 +22,7 @@ import cn.tauren.framework.util.AssertUtil;
  */
 public abstract class BeanResolver {
 
-    private BeanFactory   beanFactory;
+    protected BeanFactory beanFactory;
 
     /** 代理类生成器 */
     private ProxyResolver proxyResolver;

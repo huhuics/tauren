@@ -15,6 +15,7 @@ import cn.tauren.framework.ioc.api.BeanFactory;
 import cn.tauren.framework.ioc.api.ClassScanner;
 import cn.tauren.framework.ioc.impl.DefaultBeanFactory;
 import cn.tauren.framework.ioc.impl.DefaultClassScanner;
+import cn.tauren.framework.util.AssertUtil;
 
 /**
  * <code>ApplicationContext</code>的默认实现, 粘合框架各模块
@@ -41,9 +42,11 @@ public class DefaultApplicationContext implements ApplicationContext {
 
     public DefaultApplicationContext(String configFile) {
         pkgName = ConfigFileReader.getScanPackage(configFile);
+        AssertUtil.assertNotBlank(pkgName, "package location cann't by empty!");
+
         scanner = new DefaultClassScanner(pkgName);
         proxyResolver = new ProxyResolverImpl();
-        factory = new DefaultBeanFactory(pkgName, scanner, proxyResolver);
+        factory = new DefaultBeanFactory(scanner, proxyResolver);
     }
 
     @Override

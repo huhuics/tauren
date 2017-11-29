@@ -65,9 +65,7 @@ public class DefaultBeanFactory implements BeanFactory {
 
     private BeanResolver                contrAnnoResolver;
 
-    public DefaultBeanFactory(String pkgName, ClassScanner scanner, ProxyResolver proxyResolver) {
-        AssertUtil.assertNotBlank(pkgName, "package location cann't by empty!");
-
+    public DefaultBeanFactory(ClassScanner scanner, ProxyResolver proxyResolver) {
         nameContainer = new HashMap<String, Object>();
         typeContainer = new HashMap<Class<?>, Object>();
         this.scanner = scanner;

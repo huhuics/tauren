@@ -4,7 +4,10 @@
  */
 package cn.tauren.framework.util;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+
+import org.apache.commons.lang3.reflect.MethodUtils;
 
 /**
  * 工具类
@@ -34,6 +37,21 @@ public final class ClassUtil {
      */
     public static boolean isInterfaceOrAbstract(Class<?> clazz) {
         return clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers());
+    }
+
+    /**
+     * 调用类的方法
+     * @param instance
+     * @param method
+     * @param args
+     * @return
+     */
+    public static Object invoke(Object instance, Method method, Object[] args) {
+        try {
+            return method.invoke(instance, args);
+        } catch (Exception e) {
+            throw new RuntimeException("调用方法异常", e);
+        }
     }
 
 }
