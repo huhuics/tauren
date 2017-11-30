@@ -12,29 +12,29 @@ DI是在编译阶段尚未知所需的功能是来自哪个的类的情况下，
 
 ## 设计思路
 
-IoC的输入为需要扫描的包路径*pkgPath*，项目启动时，tauren会依次执行：
+IoC的输入为需要扫描的包路径*pkgName*，项目启动时，tauren会依次执行：
 
 1. 初始化bean容器*beanContainer*
-2. 扫描*pkgPath*下的所有类，放入*classList*，对所有被`@Bean`修饰的类，创建其实例并放入*beanContainer*
+2. 扫描*pkgName*下的所有类，放入*classList*，对所有被`@Bean`修饰的类，创建其实例并放入*beanContainer*
 	- 如果该类中有被`@InstanceConstructor`修饰的构造方法，调用该构造方法创建实例，否则调用无参构造方法创建实例，放入*beanContainer*，如果没有无参构造方法，抛出异常
 3. 扫描*beanContainer*的所有bean，进行依赖注入
 	- 如果该类下有被`@Inject`修饰的属性，查找*beanContainer*，存在则注入该bean，不存在则抛出异常
 
 ## 模块设计
-- ClassScanner-类扫描器
-	- 接收*pkgPath*值，并持有*classList*
-	- 初始化*classList*，根据路径扫描`.class`文件并将对应的Class对象放入*classList*
-	- 根据类型获取类列表
-	- 根据注解获取类列表
-	
 - BeanFactory-bean工厂
-	- 持有*beanContainer*，ClassScanner实例*classScanner*
+	- 持有*beanContainer*，ClassScanner实例*classScanner*，BeanInjector实例*beanInjector*
 	- 初始化*beanContainer*，创建所有被`@Bean`修饰的类的实例
 	- 获取所有bean列表
 	- 通过名称获取bean
 	- 通过类型获取bean列表
 	
+- ClassScanner-类扫描器
+	- 接收*pkgName*值，并持有*classList*
+	- 初始化*classList*，根据路径扫描`.class`文件并将对应的Class对象放入*classList*
+	- 根据类型获取类列表
+	- 根据注解获取类列表
+
 - BeanInjector-bean注入器
-	- 持有BeanFactory实例*beanFactory*
+	- 持有ClassScanner实例*classScanner*，BeanFactory实例*beanFactory*
 	- 扫描所有bean，进行依赖注入
 	
