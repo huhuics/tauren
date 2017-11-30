@@ -9,7 +9,7 @@ import java.util.Collection;
 import cn.tauren.framework.ConfigFileReader;
 import cn.tauren.framework.Constants;
 import cn.tauren.framework.aop.api.ProxyResolver;
-import cn.tauren.framework.aop.impl.ProxyResolverImpl;
+import cn.tauren.framework.aop.impl.DefaultProxyResolver;
 import cn.tauren.framework.exception.BeanException;
 import cn.tauren.framework.ioc.api.BeanFactory;
 import cn.tauren.framework.ioc.api.ClassScanner;
@@ -45,7 +45,7 @@ public class DefaultApplicationContext implements ApplicationContext {
         AssertUtil.assertNotBlank(pkgName, "package location cann't by empty!");
 
         scanner = new DefaultClassScanner(pkgName);
-        proxyResolver = new ProxyResolverImpl();
+        proxyResolver = new DefaultProxyResolver();
         factory = new DefaultBeanFactory(scanner, proxyResolver);
     }
 

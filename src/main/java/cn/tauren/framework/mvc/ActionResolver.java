@@ -10,15 +10,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import cn.tauren.framework.enums.RequestMethod;
 import cn.tauren.framework.mvc.annotation.RequestMapping;
-import cn.tauren.framework.util.WebUtil;
 import cn.tauren.framework.util.AssertUtil;
+import cn.tauren.framework.util.WebUtil;
 
 /**
  * 封装URI与Action对应关系
  * @author HuHui
- * @version $Id: DefaultActionResolver.java, v 0.1 2017年11月29日 上午9:05:06 HuHui Exp $
+ * @version $Id: ActionResolver.java, v 0.1 2017年11月29日 上午9:05:06 HuHui Exp $
  */
-public class DefaultActionResolver {
+public class ActionResolver {
 
     private static final String        URI_SUFFIX = "/";
 
@@ -29,6 +29,12 @@ public class DefaultActionResolver {
      */
     private static Map<String, Action> actionMap  = new ConcurrentHashMap<String, Action>();
 
+    /**
+     * 建立URI与Action之间的对应关系
+     * @param mapping   {@link RequestMapping}
+     * @param instance  Controller类实例
+     * @param method    类方法
+     */
     public static void resolve(RequestMapping mapping, Object instance, Method method) {
         Action action = new Action(instance, method, mapping.responseMethod());
 
@@ -38,6 +44,11 @@ public class DefaultActionResolver {
         }
     }
 
+    /**
+     * 获取URI对应的Action对象
+     * @param actionKey URI
+     * @return          Action对象，如果不存在则返回null
+     */
     public static Action mapping(String actionKey) {
         return actionMap.get(actionKey);
     }

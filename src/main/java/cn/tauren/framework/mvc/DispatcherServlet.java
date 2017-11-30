@@ -49,7 +49,7 @@ public class DispatcherServlet extends HttpServlet {
 
         //组装Action Key
         String actionKey = WebUtil.getActionKey(request.getMethod(), requestPath);
-        Action action = DefaultActionResolver.mapping(actionKey);
+        Action action = ActionResolver.mapping(actionKey);
 
         if (action == null) {
             WebUtil.writeError(response, HttpServletResponse.SC_NOT_FOUND, "页面不存在");

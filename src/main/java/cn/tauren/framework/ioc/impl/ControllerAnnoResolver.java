@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import cn.tauren.framework.aop.api.ProxyResolver;
 import cn.tauren.framework.ioc.api.BeanFactory;
 import cn.tauren.framework.ioc.api.BeanResolver;
-import cn.tauren.framework.mvc.DefaultActionResolver;
+import cn.tauren.framework.mvc.ActionResolver;
 import cn.tauren.framework.mvc.annotation.Controller;
 import cn.tauren.framework.mvc.annotation.RequestMapping;
 import cn.tauren.framework.util.ClassUtil;
@@ -66,7 +66,7 @@ public class ControllerAnnoResolver extends BeanResolver {
                     continue;
                 }
 
-                DefaultActionResolver.resolve(method.getAnnotation(RequestMapping.class), beanFactory.getBean(clazz), method);
+                ActionResolver.resolve(method.getAnnotation(RequestMapping.class), beanFactory.getBean(clazz), method);
             }
         }
     }

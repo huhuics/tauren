@@ -13,7 +13,7 @@ import cn.tauren.framework.exception.AopException;
  * @author HuHui
  * @version $Id: ProxyResolver.java, v 0.1 2017年11月22日 上午10:25:19 HuHui Exp $
  */
-public class ProxyResolverImpl implements ProxyResolver {
+public class DefaultProxyResolver implements ProxyResolver {
 
     @Override
     public Object newProxyInstance(Object interceptor, Class<?> targetClass, Object target) {

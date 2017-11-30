@@ -18,7 +18,7 @@ public class ConfigFileReader {
     /**
      * 获取用户自定义配置文件中包扫码路径
      * @param configFile   用户自定义包
-     * @return
+     * @return             类扫描路径
      */
     public static String getScanPackage(String configFile) {
         return getProperties(configFile).getProperty(Constants.SCAN_PACKAGE);
