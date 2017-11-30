@@ -107,6 +107,8 @@ Spring容器将每一个正在创建的Bean标识符放在一个“当前创建B
 ## 3.4 MVC
 *Tauren*框架只有一个Servlet——**DispatcherServlet**，其作用是拦截所有客户端的请求，将请求分发给各个Controller。
 
+![](https://github.com/huhuics/Accumulate/blob/master/image/Tauren-DispatcherServlet.png?raw=true)
+
 一个客户端的请求，包含了请求方式（POST、GET等）、URI、参数等内容，我们用**请求方式:URI**来唯一标识一个请求，例如**GET:/longin/check**，而这个新字符串将会对应某个Controller的一个方法，这个方法有可能返回一个页面，或返回一个JSON字符串。
 
 基于上述的思想，我们在对类进行初始化时，如果遇到一个Controller，则遍历Controller中声明的被*@RequestMapping*标记的方法，将*@RequestMapping*中定义的值组成**请求方式:URI**作为key并放入Map，value为一个Action类。Action封装了该URI要访问的对象、方法及参数。
