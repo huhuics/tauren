@@ -40,11 +40,11 @@
 - 每个*Controller*被*@RequestMapping*标注的方法，其参数必须是HttpServletRequest
 
 # 三. 实现方式
-## 3.1 IoC(Inversion of Control)
+
 ![](https://github.com/huhuics/Accumulate/blob/master/image/Tauren.jpg)
+框架实现的类图如上图所示。下面分别说明各个模块的实现方式。
 
-IoC实现的类图如上图所示。下面分别说明各个接口和类的功能。
-
+## 3.1 IoC(Inversion of Control)
 ### 3.1.1 ClassScanner
 
 [ClassScanner](https://github.com/huhuics/tauren/blob/master/src/main/java/cn/tauren/framework/ioc/api/ClassScanner.java)是类扫描器，提供了三种方法，都是根据条件，递归扫描客户端文件夹所有的类。但是*getClassesByAnnotation*和*getClassesBySuper*方法不会返回**接口**和**抽象类**
@@ -172,12 +172,14 @@ public class LoginController {
     @Inject
     private LoginService        loginService;
 
+    /** 返回loginRet.jsp页面 */
     @RequestMapping(value = "/login/userLogin")
     public String login(HttpServletRequest request) {
         loginService.login();
         return "loginRet";
     }
 
+    /** 返回JSON对象 */
     @RequestMapping(value = "/login/check", responseMethod = ResponseMethod.JSON)
     public User check(HttpServletRequest request) {
         User user = new User(1, "宋江");
