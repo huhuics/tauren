@@ -13,9 +13,12 @@
         - [3.2.1 什么是循环依赖？](#321-什么是循环依赖)
         - [3.2.2 Spring是如何解决循环依赖？](#322-spring是如何解决循环依赖)
         - [3.2.3 Tauren是如何解决循环依赖？](#323-tauren是如何解决循环依赖)
+    - [3.3 AOP(Aspect Oriented Programming)](#33-aopaspect-oriented-programming)
+    - [3.4 MVC](#34-mvc)
 - [四. 使用方式](#四-使用方式)
     - [4.1 IoC使用](#41-ioc使用)
     - [4.2 AOP使用](#42-aop使用)
+    - [4.3 MVC使用](#43-mvc使用)
    
 
 
@@ -34,9 +37,11 @@
 
 - *@Bean*只应用于类，应用于接口或抽象类将无效
 
+- 每个*Controller*被*@RequestMapping*标注的方法，其参数必须是HttpServletRequest
+
 # 三. 实现方式
 ## 3.1 IoC(Inversion of Control)
-![](https://github.com/huhuics/Accumulate/blob/master/image/Tauren-IoC.jpg?raw=true)
+![](https://github.com/huhuics/Accumulate/blob/master/image/Tauren.jpg)
 
 IoC实现的类图如上图所示。下面分别说明各个接口和类的功能。
 
@@ -92,12 +97,22 @@ Spring容器将每一个正在创建的Bean标识符放在一个“当前创建B
 
 对于构造器循环依赖，tauren同样无法解决，因为这本身就是无解的。对于setter循环依赖，由于tauren只有注解模式，没有xml模式，且在注入字段表示的对象时，该字段所在的类已经被实例化了，因此setter循环依赖在tauren中并不存在。
 
-## 3.2 AOP(Aspect Oriented Programming)
+## 3.3 AOP(Aspect Oriented Programming)
 *Tauren*使用*CGLib*来实现代理类的生成
 
 *Tauren*的AOP中暂时不支持对类的批量拦截，目前只做到了对指定类所有方法的拦截。首先定义了拦截模板类[ProxyInterceptor](https://github.com/huhuics/tauren/blob/master/src/main/java/cn/tauren/framework/aop/api/ProxyInterceptor.java)，这个类定了模板方法，有前置增强before()，后置增强after()及异常增强exception()。客户端的拦截器需要继承此类并选择性覆盖这三个方法。*ProxyInterceptor*同时负责代理类的创建。
 
 *BeanFactory*中在实例化Bean时，如果发现某个类被[@Intercept](https://github.com/huhuics/tauren/blob/master/src/main/java/cn/tauren/framework/aop/annotation/Intercept.java)修饰，则说明该类将会被框架拦截并增强，*@Intercept* 指定了增强类的名称或类型，二者不能同时为空。BeanFactory通过名称或者类型找到了目标类的增强类，通过创建代理类实例，取代容器中目标类的实例，这样从BeanFactory中取出的实例就是增强之后的对象。
+
+## 3.4 MVC
+*Tauren*框架只有一个Servlet——**DispatcherServlet**，其作用是拦截所有客户端的请求，将请求分发给各个Controller。
+
+一个客户端的请求，包含了请求方式（POST、GET等）、URI、参数等内容，我们用**请求方式:URI**来唯一标识一个请求，例如**GET:/longin/check**，而这个新字符串将会对应某个Controller的一个方法，这个方法有可能返回一个页面，或返回一个JSON字符串。
+
+基于上述的思想，我们在对类进行初始化时，如果遇到一个Controller，则遍历Controller中声明的被*@RequestMapping*标记的方法，将*@RequestMapping*中定义的值组成**请求方式:URI**作为key并放入Map，value为一个Action类。Action封装了该URI要访问的对象、方法及参数。
+
+当客户端请求过来时，通过客户端的请求组成的key去Map中查询对应的Action，如果查到了，就通过反射执行对应Controller的方法，没查到则返回404。
+
 
 # 四. 使用方式
 ## 4.1 IoC使用
@@ -147,6 +162,33 @@ public class UserServiceImpl implements UserService {
 ```
 
 然后正常调用`UserService`中的方法，原方法即得到增强。
+
+## 4.3 MVC使用
+在客户端，一个*Controller*的典型写法是这样的：
+```java
+@Controller
+public class LoginController {
+
+    @Inject
+    private LoginService        loginService;
+
+    @RequestMapping(value = "/login/userLogin")
+    public String login(HttpServletRequest request) {
+        loginService.login();
+        return "loginRet";
+    }
+
+    @RequestMapping(value = "/login/check", responseMethod = ResponseMethod.JSON)
+    public User check(HttpServletRequest request) {
+        User user = new User(1, "宋江");
+        return user;
+    }
+}
+```
+
+`@Controller`的作用和`@Bean`的作用是一样的，只不过名称不一样而已。每个被`@RequestMapping`标记的方法，其参数只能是*HttpServletRequest*，框架负责将该参数注入。方法的返回值是一个字符串，该字符串实际代表的是*loginRet.jsp*。
+
+`@RequestMapping`注解有三个值：value表示uri；requestMethod表示http请求方式，默认同时支持GET和POST；responseMethod表示返回类型，可以是页面也可以是JSON字符串。
 
 
 *代码持续更新中*
