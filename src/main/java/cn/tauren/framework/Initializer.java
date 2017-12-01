@@ -44,7 +44,7 @@ public class Initializer implements ServletContextListener {
     private void registeJspServlet(ServletContext context) {
         ServletRegistration jspServlet = context.getServletRegistration("jsp");
         jspServlet.addMapping("/index.jsp");
-        String jspPath = Constants.PREFIX_JSP_PATH;
+        String jspPath = Constants.JSP_PATH_VALUE;
         jspServlet.addMapping(jspPath + "*");
     }
 

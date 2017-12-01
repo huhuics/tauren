@@ -59,7 +59,7 @@ public class WebUtil {
      * @param path jsp文件名
      */
     public static void forward(String path, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        StringBuilder sBuilder = new StringBuilder(Constants.PREFIX_JSP_PATH);
+        StringBuilder sBuilder = new StringBuilder(Constants.JSP_PATH_VALUE);
         sBuilder.append(path);
         sBuilder.append(Constants.SUFFIX_JSP);
         String location = sBuilder.toString();

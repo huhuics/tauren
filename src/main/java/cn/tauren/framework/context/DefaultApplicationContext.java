@@ -7,7 +7,6 @@ package cn.tauren.framework.context;
 import java.util.Collection;
 
 import cn.tauren.framework.ConfigFileReader;
-import cn.tauren.framework.Constants;
 import cn.tauren.framework.aop.api.ProxyResolver;
 import cn.tauren.framework.aop.impl.DefaultProxyResolver;
 import cn.tauren.framework.exception.BeanException;
@@ -37,11 +36,7 @@ public class DefaultApplicationContext implements ApplicationContext {
     private ProxyResolver proxyResolver;
 
     public DefaultApplicationContext() {
-        this(Constants.DEFAULT_CONFIG_NAME);
-    }
-
-    public DefaultApplicationContext(String configFile) {
-        pkgName = ConfigFileReader.getScanPackage(configFile);
+        pkgName = ConfigFileReader.getScanPackage();
         AssertUtil.assertNotBlank(pkgName, "package location cann't by empty!");
 
         scanner = new DefaultClassScanner(pkgName);

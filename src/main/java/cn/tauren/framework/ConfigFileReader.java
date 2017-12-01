@@ -15,17 +15,38 @@ import java.util.Properties;
  */
 public class ConfigFileReader {
 
-    /**
-     * 获取用户自定义配置文件中包扫码路径
-     * @param configFile   用户自定义包
-     * @return             类扫描路径
-     */
-    public static String getScanPackage(String configFile) {
-        return getProperties(configFile).getProperty(Constants.SCAN_PACKAGE);
+    private static Properties prop;
+
+    static {
+        prop = getProperties();
     }
 
-    private static Properties getProperties(String configFile) {
-        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(configFile);
+    /**
+     * 获取用户自定义配置文件中包扫码路径
+     * @param configFile   用户自定义配置文件
+     * @return             类扫描路径
+     */
+    public static String getScanPackage() {
+        return prop.getProperty(Constants.SCAN_PACKAGE_FIELD);
+    }
+
+    /**
+     * 获取JSP文件路径
+     * 如果不存在则返回默认路径
+     */
+    public static String getJspPath() {
+        return prop.getProperty(Constants.JSP_PATH_FIELD, Constants.DEFAULT_JSP_PATH_VALUE);
+    }
+
+    /**
+     * 获取主页
+     */
+    public static String getIndex() {
+        return prop.getProperty(Constants.INDEX_FIELD, Constants.DEFAULT_INDEX);
+    }
+
+    private static Properties getProperties() {
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(Constants.DEFAULT_CONFIG_NAME);
         Properties prop = new Properties();
         try {
             prop.load(is);
