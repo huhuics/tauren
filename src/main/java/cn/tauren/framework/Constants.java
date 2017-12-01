@@ -26,7 +26,6 @@ public interface Constants {
     /********end********/
 
     /************************配置文件字段默认值***************************/
-
     /** 默认jsp目录值 */
     static final String DEFAULT_JSP_PATH_VALUE = "/WEB-INF/jsp/";
 
@@ -35,7 +34,6 @@ public interface Constants {
     /********end********/
 
     /************************Tauren框架使用常量***************************/
-
     static final String FILE_DOT               = ".";
 
     /** 字符编码 */
