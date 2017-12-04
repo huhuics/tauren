@@ -16,10 +16,10 @@
 
 IoC的输入为需要扫描的包路径*pkgName*，项目启动时，tauren会依次执行:
 
-1. 初始化bean容器*beanContainer*
-2. 扫描*pkgName*下的所有类，对所有被`@Bean`修饰的类，创建其实例并放入*beanContainer*
-3. 初始化bean注入器*beanInjector* 
-4. 扫描*beanContainer*的所有bean，对所有被`@Inject`修饰的属性，查找对应的bean进行注入
+1. **容器初始化**: 初始化bean容器*beanContainer*
+2. **创建实例**: 扫描*pkgName*下的所有类，对所有被`@Bean`修饰的类，创建其实例并放入*beanContainer*
+3. **注入器初始化**: 初始化bean注入器*beanInjector* 
+4. **注入**: 扫描*beanContainer*的所有bean，对所有被`@Inject`修饰的属性，查找对应的bean进行注入
 
 ### 1.2 模块设计
 
@@ -56,5 +56,5 @@ IoC的输入为需要扫描的包路径*pkgName*，项目启动时，tauren会�
 	
 ### 1.3 实现
 
-	- [TestIoC.java](https://github.com/Sunxiai51/tauren/blob/wyy/src/test/java/com/sunveee/tauren/test/ioc/TestIoC.java)
+> [TestIoC.java](https://github.com/Sunxiai51/tauren/blob/wyy/src/test/java/com/sunveee/tauren/test/ioc/TestIoC.java)
 	
