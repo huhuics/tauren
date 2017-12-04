@@ -3,9 +3,12 @@ package cn.tauren.framework.test.orm;
 import java.io.Serializable;
 import java.util.Date;
 
+import cn.tauren.framework.orm.annotation.Column;
+
 public class BizPayOrder implements Serializable {
 
-    /**  */
+    /** uid */
+    @Column(ignore = true)
     private static final long serialVersionUID = -7182490332977441628L;
 
     private Long              id;
@@ -16,7 +19,7 @@ public class BizPayOrder implements Serializable {
 
     private String            tradeNo;
 
-    private Long              tradeAmount;
+    private int               tradeAmount;
 
     private String            tradeStatus;
 
@@ -62,11 +65,11 @@ public class BizPayOrder implements Serializable {
         this.tradeNo = tradeNo == null ? null : tradeNo.trim();
     }
 
-    public Long getTradeAmount() {
+    public int getTradeAmount() {
         return tradeAmount;
     }
 
-    public void setTradeAmount(Long tradeAmount) {
+    public void setTradeAmount(int tradeAmount) {
         this.tradeAmount = tradeAmount;
     }
 

@@ -73,6 +73,25 @@ public class ClassUtilTest {
         Assert.assertTrue(Null.class.isInstance(ObjectUtils.NULL));
     }
 
+    @Test
+    public void testUnderline() {
+        String str = "abcDeFGH";
+        String underline = ClassUtil.underline(str);
+        Assert.assertTrue(StringUtils.equals(underline, "abc_de_f_g_h"));
+
+        String str2 = "";
+        String underline2 = ClassUtil.underline(str2);
+        Assert.assertTrue(StringUtils.equals(underline2, ""));
+    }
+
+    @Test
+    public void testIsPrimitive() {
+        Assert.assertTrue(ClassUtil.isPrimitive(Integer.class));
+        Assert.assertTrue(ClassUtil.isPrimitive(Double.class));
+        Assert.assertTrue(ClassUtil.isPrimitive(String.class));
+
+    }
+
     class AbClass {
         public AbClass(int i) {
             System.out.println("i=" + i);
