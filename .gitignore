@@ -1,1 +1,8 @@
 /target/
+/bin/
+/.settings/
+.classpath
+.project
+pom.xml
+.settings/org.eclipse.jdt.core.prefs
+README.md
