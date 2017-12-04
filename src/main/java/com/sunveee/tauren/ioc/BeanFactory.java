@@ -10,4 +10,6 @@ import java.util.Map;
  */
 public interface BeanFactory {
     Map<String, Object> getBeans();
+
+    Object getBean(String beanName);
 }

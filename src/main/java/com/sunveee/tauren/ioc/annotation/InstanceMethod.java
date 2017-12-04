@@ -13,4 +13,6 @@ import java.lang.annotation.Target;
 @Target({ METHOD, CONSTRUCTOR })
 public @interface InstanceMethod {
     String[] args() default {};
+
+    Class<?>[] argsType() default {};
 }

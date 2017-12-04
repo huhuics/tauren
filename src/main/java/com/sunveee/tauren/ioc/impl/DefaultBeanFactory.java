@@ -32,9 +32,9 @@ public class DefaultBeanFactory implements BeanFactory {
         this.beanContainer = new HashMap<String, Object>();
         this.classScanner = new DefaultClassScanner(pkgName);
 
-        initBeanContainer(); // 初始化bean容器
+        initBeanContainer(); // 填充bean
 
-        this.beanInjector = new DefaultBeanInjector(this.classScanner, this);
+        this.beanInjector = new DefaultBeanInjector(this);
 
         inject(); // 依赖注入
     }
@@ -44,15 +44,20 @@ public class DefaultBeanFactory implements BeanFactory {
         return beanContainer;
     }
 
+    @Override
+    public Object getBean(String beanName) {
+        return beanContainer.get(beanName);
+    }
+
     /**
-     * 初始化bean容器
+     * 填充bean
      */
     private void initBeanContainer() {
         List<Class<?>> classList = classScanner.getClassListByAnnotation(Bean.class);
         if (CollectionUtils.isNotEmpty(classList)) {
-            for (Class<?> clazz : classList) {
-                Bean beanAnno = clazz.getAnnotation(Bean.class);
-                String beanName = IoCUtil.getDefaultBeanNameByClass(clazz);
+            for (Class<?> _clazz : classList) {
+                Bean beanAnno = _clazz.getAnnotation(Bean.class);
+                String beanName = IoCUtil.getDefaultBeanNameByClass(_clazz);
 
                 //如果指定了bean的name则修改默认名称
                 if (StringUtils.isNotBlank(beanAnno.name())) {
@@ -61,10 +66,16 @@ public class DefaultBeanFactory implements BeanFactory {
 
                 AssertUtil.assertTrue(!beanContainer.containsKey(beanName), "类名重复");
 
-                // TODO 创建实例
-                Object instance = null;
+                // 创建实例
+                Object instance;
+                try {
+                    // TODO 这里直接调用了类的无参构造方法创建实例,后续还考虑加上对@InstanceConstructor注解的支持
+                    instance = _clazz.newInstance();
+                    beanContainer.put(beanName, instance);
+                } catch (InstantiationException | IllegalAccessException e) {
+                    throw new RuntimeException("初始化类失败", e);
+                }
 
-                beanContainer.put(beanName, instance);
             }
         }
     }
