@@ -56,5 +56,5 @@ IoC的输入为需要扫描的包路径*pkgName*，项目启动时，tauren会�
 	
 ### 1.3 实现
 
-[TestIoC](https://github.com/Sunxiai51/tauren/blob/wyy/src/test/java/com/sunveee/tauren/test/ioc/TestIoC.java)	
+	- [TestIoC.java](https://github.com/Sunxiai51/tauren/blob/wyy/src/test/java/com/sunveee/tauren/test/ioc/TestIoC.java)
 	

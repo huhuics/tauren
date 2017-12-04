@@ -7,8 +7,10 @@ public class TestIoC {
 
     public static void main(String[] args) {
         BeanFactory beanFactory = new DefaultBeanFactory("com.sunveee.tauren.test.ioc");
-        BeanB beanB = (BeanB) beanFactory.getBean("abc");
-        beanB.printName();
+        Student student = (Student) beanFactory.getBean("student");
+        System.out.println(student.getName());
+        System.out.println(student.getSchool().getName());
+
     }
 
 }
