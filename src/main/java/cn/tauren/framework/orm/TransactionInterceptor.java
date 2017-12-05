@@ -14,6 +14,7 @@ import cn.tauren.framework.aop.api.ProxyInterceptor;
 
 /**
  * 事务代理
+ * <p>拦截一个类中所有需要被事务代理的方法</p>
  * @author HuHui
  * @version $Id: TransactionInterceptor.java, v 0.1 2017年12月5日 上午10:09:29 HuHui Exp $
  */

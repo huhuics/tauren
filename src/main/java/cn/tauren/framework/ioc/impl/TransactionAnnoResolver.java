@@ -8,10 +8,12 @@ import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import cn.tauren.framework.aop.api.ProxyInterceptor;
 import cn.tauren.framework.aop.api.ProxyResolver;
 import cn.tauren.framework.ioc.api.BaseResolver;
 import cn.tauren.framework.ioc.api.BeanFactory;
 import cn.tauren.framework.orm.TransactionInterceptor;
+import cn.tauren.framework.orm.TransactionPartialInterceptor;
 import cn.tauren.framework.orm.annotation.Transaction;
 
 /**
@@ -22,9 +24,11 @@ import cn.tauren.framework.orm.annotation.Transaction;
 public class TransactionAnnoResolver extends BaseResolver {
 
     /** 代理类生成器 */
-    private ProxyResolver          proxyResolver;
+    private ProxyResolver    proxyResolver;
 
-    private TransactionInterceptor transInterceptor;
+    private ProxyInterceptor transInterceptor;
+
+    private ProxyInterceptor transPartInterceptor;
 
     public TransactionAnnoResolver() {
         super();
@@ -33,6 +37,8 @@ public class TransactionAnnoResolver extends BaseResolver {
     public TransactionAnnoResolver(BeanFactory beanFactory, ProxyResolver proxyResolver) {
         super(beanFactory);
         transInterceptor = new TransactionInterceptor();
+        transPartInterceptor = new TransactionPartialInterceptor();
+
         this.proxyResolver = proxyResolver;
     }
 
@@ -45,15 +51,17 @@ public class TransactionAnnoResolver extends BaseResolver {
         for (Class<?> clazz : classes) {
 
             Object targetInstance = beanFactory.getBean(clazz);
+            Object proxyInstance;
 
             if (clazz.isAnnotationPresent(Transaction.class)) {//类中所有方法都要增加事务
-                Object proxyInstance = proxyResolver.newProxyInstance(transInterceptor, clazz, targetInstance);
-                String beanName = getBeanName(clazz);
-                beanFactory.remove(clazz, beanName);
-                beanFactory.putClass(clazz, beanName, proxyInstance);
+                proxyInstance = proxyResolver.newProxyInstance(transInterceptor, clazz, targetInstance);
             } else {//类中被@Transaction标注的方法要增加事务
-
+                proxyInstance = proxyResolver.newProxyInstance(transPartInterceptor, clazz, targetInstance);
             }
+
+            String beanName = getBeanName(clazz);
+            beanFactory.remove(clazz, beanName);
+            beanFactory.putClass(clazz, beanName, proxyInstance);
         }
 
     }

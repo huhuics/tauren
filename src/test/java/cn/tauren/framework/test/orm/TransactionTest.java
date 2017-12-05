@@ -46,8 +46,10 @@ public class TransactionTest {
         BizPayOrderDao dao = context.getBean(BizPayOrderDao.class);
         Assert.assertNotNull(dao);
         String sql = "UPDATE biz_pay_order SET trade_amount = ? WHERE id = ?";
-        Object[] params = { 12345, 5 };
-        dao.update(conn, sql, params);
+        Object[] params = { 12, 5 };
+        //        dao.updateWithoutTran(conn, sql, params);
+        dao.updateWithTran(conn, sql, params);
+
     }
 
 }
