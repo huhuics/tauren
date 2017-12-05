@@ -24,7 +24,10 @@ import cn.tauren.framework.util.ClassUtil;
  */
 public class ResultSetHandlerFactory {
 
-    public static <T> ResultSetHandler<List<T>> createHandler(final Class<T> type) {
+    /**
+     * 创建查询ResultSetHandler
+     */
+    public static <T> ResultSetHandler<List<T>> createQueryHandler(final Class<T> type) {
         ResultSetHandler<List<T>> rsh = new ResultSetHandler<List<T>>() {
 
             @Override
@@ -68,6 +71,25 @@ public class ResultSetHandlerFactory {
     }
 
     /**
+     * 创建插入类型ResultSetHandler
+     */
+    public static <T> ResultSetHandler<T> createInsertHandler() {
+        ResultSetHandler<T> rsh = new ResultSetHandler<T>() {
+
+            @Override
+            @SuppressWarnings("unchecked")
+            public T handle(ResultSet rs) throws SQLException {
+                if (rs.next()) {
+                    return (T) rs.getObject(1);
+                }
+                return null;
+            }
+        };
+
+        return rsh;
+    }
+
+    /**
      * 获取字段名
      * <p>如果字段被{@link Column}修饰，则使用用户自定义名称</p>
      * <p>否则返回字段名的下划线表示，例如：userName ==> user_name</p>
@@ -89,9 +111,7 @@ public class ResultSetHandlerFactory {
     private static boolean isIgnore(Field field) {
         if (field.isAnnotationPresent(Column.class)) {
             Column anno = field.getAnnotation(Column.class);
-            if (anno.ignore()) {
-                return true;
-            }
+            return anno.ignore();
         }
 
         return false;
