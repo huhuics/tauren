@@ -12,7 +12,7 @@ import cn.tauren.framework.orm.annotation.Transaction;
 
 /**
  * 事务代理
- * <p>拦截一个类中被{@link Transaction}标注的方法，再生成事务代理</p>
+ * <p>拦截一个类中被{@link Transaction}标注的方法，并生成其事务代理</p>
  * @author HuHui
  * @version $Id: TransactionPartialInterceptor.java, v 0.1 2017年12月5日 下午7:47:36 HuHui Exp $
  */

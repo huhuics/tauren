@@ -4,7 +4,6 @@
  */
 package cn.tauren.framework.test.orm;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import cn.tauren.framework.ioc.annotation.Bean;
@@ -20,13 +19,13 @@ import cn.tauren.framework.orm.annotation.Transaction;
 public class BizPayOrderDao extends BaseDao {
 
     @Transaction
-    public int updateWithTran(Connection connection, String sql, Object... params) throws SQLException {
-        int cnt = super.update(connection, sql, params);
+    public int updateWithTran(String sql, Object... params) throws SQLException {
+        int cnt = super.update(sql, params);
         throw new RuntimeException("测试异常");
     }
 
-    public int updateWithoutTran(Connection connection, String sql, Object... params) throws SQLException {
-        int cnt = super.update(connection, sql, params);
+    public int updateWithoutTran(String sql, Object... params) throws SQLException {
+        int cnt = super.update(sql, params);
         throw new RuntimeException("测试异常");
     }
 

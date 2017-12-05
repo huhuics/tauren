@@ -22,7 +22,7 @@ public class TransactionInterceptor extends ProxyInterceptor {
 
     @Override
     protected void before(Class<?> targetClass, Method method, Object[] args) {
-        Connection conn = getConnection(targetClass, method, args);
+        Connection conn = ConnectionHolder.get();
         try {
             if (conn != null && conn.getAutoCommit()) {
                 conn.setAutoCommit(false);
@@ -34,7 +34,7 @@ public class TransactionInterceptor extends ProxyInterceptor {
 
     @Override
     protected void after(Class<?> targetClass, Method method, Object[] args) {
-        Connection conn = getConnection(targetClass, method, args);
+        Connection conn = ConnectionHolder.get();
         try {
             if (conn != null && !conn.getAutoCommit()) {
                 conn.commit();
@@ -51,7 +51,7 @@ public class TransactionInterceptor extends ProxyInterceptor {
 
     @Override
     protected void exception(Class<?> targetClass, Method method, Object[] args, Throwable e) {
-        Connection conn = getConnection(targetClass, method, args);
+        Connection conn = ConnectionHolder.get();
         try {
             if (conn != null && !conn.getAutoCommit()) {
                 conn.rollback();
@@ -66,21 +66,6 @@ public class TransactionInterceptor extends ProxyInterceptor {
         }
 
         throw new RuntimeException(method.getName() + "方法执行失败", e);
-    }
-
-    /**
-     * 通过方法参数获取数据库连接
-     */
-    private Connection getConnection(Class<?> targetClass, Method method, Object[] args) {
-        Connection conn = null;
-        for (Object arg : args) {
-            if (arg instanceof Connection) {
-                conn = (Connection) arg;
-                break;
-            }
-        }
-
-        return conn;
     }
 
 }
