@@ -12,12 +12,13 @@ import java.lang.annotation.Target;
 
 /**
  * 事务注解
- * <p>只能标注于方法，表示该方法执行事务操作</p>
+ * <p>标注于类，表示该类所有方法执行事务操作</p>
+ * <p>标注于方法，表示该方法执行事务操作</p>
  * @author HuHui
  * @version $Id: Transaction.java, v 0.1 2017年12月5日 上午11:31:01 HuHui Exp $
  */
 @Documented
-@Target(ElementType.METHOD)
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Transaction {
 

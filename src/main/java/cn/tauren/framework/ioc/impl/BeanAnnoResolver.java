@@ -34,7 +34,7 @@ public class BeanAnnoResolver extends BaseResolver {
         super.resolve(classes);
     }
 
-    public void remvoeInterceptClasses(List<Class<?>> classes) {
+    private void remvoeInterceptClasses(List<Class<?>> classes) {
         Iterator<Class<?>> iterator = classes.iterator();
         while (iterator.hasNext()) {
             Class<?> next = iterator.next();

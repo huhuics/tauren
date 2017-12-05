@@ -74,4 +74,9 @@ public class DefaultApplicationContext implements ApplicationContext {
         return factory.containsKey(name);
     }
 
+    @Override
+    public void remove(Class<?> clazz, String name) {
+        factory.remove(clazz, name);
+    }
+
 }

@@ -14,7 +14,7 @@ public interface Container {
     /**
      * 向Bean容器中设置元素
      * @param clazz     类的类型
-     * @param name      类的名称（Simple Name）
+     * @param name      类的名称(Simple Name)
      * @param instance  类的实例
      */
     void putClass(Class<?> clazz, String name, Object instance);
@@ -25,5 +25,12 @@ public interface Container {
      * @return      存在返回true
      */
     boolean containsKey(String name);
+
+    /**
+     * 移除容器内的Bean实例
+     * @param clazz  类的类型
+     * @param name   类的名称(Simple Name)
+     */
+    void remove(Class<?> clazz, String name);
 
 }

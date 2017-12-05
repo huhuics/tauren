@@ -15,9 +15,9 @@ import cn.tauren.framework.aop.api.ProxyInterceptor;
 /**
  * 事务代理
  * @author HuHui
- * @version $Id: TransactionProxy.java, v 0.1 2017年12月5日 上午10:09:29 HuHui Exp $
+ * @version $Id: TransactionInterceptor.java, v 0.1 2017年12月5日 上午10:09:29 HuHui Exp $
  */
-public class TransactionProxy extends ProxyInterceptor {
+public class TransactionInterceptor extends ProxyInterceptor {
 
     @Override
     protected void before(Class<?> targetClass, Method method, Object[] args) {
