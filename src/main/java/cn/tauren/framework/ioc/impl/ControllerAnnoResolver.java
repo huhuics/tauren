@@ -10,9 +10,8 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import cn.tauren.framework.aop.api.ProxyResolver;
 import cn.tauren.framework.ioc.api.BeanFactory;
-import cn.tauren.framework.ioc.api.BeanResolver;
+import cn.tauren.framework.ioc.api.BaseResolver;
 import cn.tauren.framework.mvc.ActionResolver;
 import cn.tauren.framework.mvc.annotation.Controller;
 import cn.tauren.framework.mvc.annotation.RequestMapping;
@@ -23,10 +22,10 @@ import cn.tauren.framework.util.ClassUtil;
  * @author HuHui
  * @version $Id: ControllerAnnoResolver.java, v 0.1 2017年11月27日 下午9:23:34 HuHui Exp $
  */
-public class ControllerAnnoResolver extends BeanResolver {
+public class ControllerAnnoResolver extends BaseResolver {
 
-    public ControllerAnnoResolver(BeanFactory beanFactory, ProxyResolver proxyResolver) {
-        super(beanFactory, proxyResolver);
+    public ControllerAnnoResolver(BeanFactory beanFactory) {
+        super(beanFactory);
     }
 
     @Override

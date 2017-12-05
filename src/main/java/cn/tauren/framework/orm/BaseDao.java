@@ -19,13 +19,7 @@ import org.apache.commons.dbutils.ResultSetHandler;
  */
 public abstract class BaseDao {
 
-    private Connection    connection;
-
     protected QueryRunner runner = new QueryRunner();
-
-    public BaseDao(Connection connection) {
-        this.connection = connection;
-    }
 
     /**
      * 通用查询方法
@@ -35,7 +29,7 @@ public abstract class BaseDao {
      * @return        查询结果集合
      * @throws SQLException
      */
-    public <T> List<T> query(String sql, Class<T> type, Object... params) throws SQLException {
+    public <T> List<T> query(Connection connection, String sql, Class<T> type, Object... params) throws SQLException {
         ResultSetHandler<List<T>> rsh = ResultSetHandlerFactory.createQueryHandler(type);
         return runner.query(connection, sql, rsh, params);
     }
@@ -44,8 +38,8 @@ public abstract class BaseDao {
      * 无参的通用查询方法
      * @see query(String, Class<T>, Object...)
      */
-    public <T> List<T> query(String sql, Class<T> type) throws SQLException {
-        return query(sql, type, (Object[]) null);
+    public <T> List<T> query(Connection connection, String sql, Class<T> type) throws SQLException {
+        return query(connection, sql, type, (Object[]) null);
     }
 
     /**
@@ -56,7 +50,7 @@ public abstract class BaseDao {
      * @return           插入数据后的主键
      * @throws SQLException 
      */
-    public <T> T insert(String sql, Class<T> type, Object... params) throws SQLException {
+    public <T> T insert(Connection connection, String sql, Class<T> type, Object... params) throws SQLException {
         ResultSetHandler<T> rsh = ResultSetHandlerFactory.createInsertHandler();
         return runner.insert(connection, sql, rsh, params);
     }
@@ -68,7 +62,7 @@ public abstract class BaseDao {
      * @return          被修改的记录数
      * @throws SQLException
      */
-    public int update(String sql, Object... params) throws SQLException {
+    public int update(Connection connection, String sql, Object... params) throws SQLException {
         return runner.update(connection, sql, params);
     }
 
@@ -76,7 +70,7 @@ public abstract class BaseDao {
      * 单个参数的数据修改方法
      * @see update(String, Object...)
      */
-    public int update(String sql, Object param) throws SQLException {
+    public int update(Connection connection, String sql, Object param) throws SQLException {
         return runner.update(connection, sql, param);
     }
 
@@ -84,7 +78,7 @@ public abstract class BaseDao {
      * 无参的数据修改方法
      * @see update(String, Object...)
      */
-    public int update(String sql) throws SQLException {
+    public int update(Connection connection, String sql) throws SQLException {
         return runner.update(connection, sql);
     }
 

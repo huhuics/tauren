@@ -4,39 +4,44 @@
  */
 package cn.tauren.framework.ioc.impl;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.Iterator;
+import java.util.List;
 
-import cn.tauren.framework.aop.api.ProxyResolver;
-import cn.tauren.framework.ioc.annotation.Bean;
+import cn.tauren.framework.aop.annotation.Intercept;
+import cn.tauren.framework.ioc.api.BaseResolver;
 import cn.tauren.framework.ioc.api.BeanFactory;
-import cn.tauren.framework.ioc.api.BeanResolver;
-import cn.tauren.framework.util.ClassUtil;
 
 /**
  * 负责@Bean注解的类的初始化工作
  * @author HuHui
  * @version $Id: BeanAnnoResolver.java, v 0.1 2017年11月27日 下午9:22:23 HuHui Exp $
  */
-public class BeanAnnoResolver extends BeanResolver {
+public class BeanAnnoResolver extends BaseResolver {
 
     public BeanAnnoResolver() {
         super();
     }
 
-    public BeanAnnoResolver(BeanFactory beanFactory, ProxyResolver proxyResolver) {
-        super(beanFactory, proxyResolver);
+    public BeanAnnoResolver(BeanFactory beanFactory) {
+        super(beanFactory);
     }
 
     @Override
-    public String getBeanName(Class<?> clazz) {
-        Bean beanAnno = clazz.getAnnotation(Bean.class);
-        String beanName = ClassUtil.humpNaming(clazz.getSimpleName());
+    public void resolve(List<Class<?>> classes) {
+        //移除被@Intercept标记的类
+        remvoeInterceptClasses(classes);
 
-        //如果指定了bean的name则修改默认名称
-        if (StringUtils.isNotBlank(beanAnno.value())) {
-            beanName = beanAnno.value();
+        super.resolve(classes);
+    }
+
+    public void remvoeInterceptClasses(List<Class<?>> classes) {
+        Iterator<Class<?>> iterator = classes.iterator();
+        while (iterator.hasNext()) {
+            Class<?> next = iterator.next();
+            if (next.isAnnotationPresent(Intercept.class)) {
+                iterator.remove();
+            }
         }
-        return beanName;
     }
 
 }
