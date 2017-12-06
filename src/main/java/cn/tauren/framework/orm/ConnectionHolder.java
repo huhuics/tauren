@@ -14,6 +14,7 @@ import java.sql.DriverManager;
  */
 public class ConnectionHolder {
 
+    // TODO 硬编码，后续再用连接池代替
     private static final ThreadLocal<Connection> holder = new ThreadLocal<Connection>() {
 
                                                             @Override

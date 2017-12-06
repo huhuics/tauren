@@ -23,6 +23,27 @@ public interface Constants {
 
     /** 主页字段 */
     static final String INDEX_FIELD            = "index";
+
+    /** 数据库驱动字段 */
+    static final String DB_DRIVER              = "db.driver";
+
+    /** 数据库URL字段 */
+    static final String DB_URL                 = "db.url";
+
+    /** 数据库用户名字段 */
+    static final String DB_USER                = "db.user";
+
+    /** 数据库密码字段 */
+    static final String DB_PASSWORD            = "db.password";
+
+    /** 最大连接数 */
+    static final String DB_MAX_TOTAL           = "db.max.total";
+
+    /** 最大空闲数 */
+    static final String DB_MAX_IDLE            = "db.max.idle";
+
+    /** 最小空闲数 */
+    static final String DB_MIN_IDLE            = "db.min.idle";
     /********end********/
 
     /************************配置文件字段默认值***************************/
@@ -31,6 +52,15 @@ public interface Constants {
 
     /** 默认主页值 */
     static final String DEFAULT_INDEX          = "index.jsp";
+
+    /** 默认最大连接数 */
+    static final int    DEFAULT_MAX_TOTAL      = 8;
+
+    /** 默认最大空闲数 */
+    static final int    DEFAULT_MAX_IDLE       = 8;
+
+    /** 默认最小空闲数 */
+    static final int    DEFAULT_MIN_IDLE       = 0;
     /********end********/
 
     /************************Tauren框架使用常量***************************/
