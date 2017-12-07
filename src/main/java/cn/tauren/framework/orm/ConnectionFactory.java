@@ -23,7 +23,6 @@ public class ConnectionFactory extends BasePooledObjectFactory<Connection> {
 
     @Override
     public Connection create() {
-        System.out.println("创建数据库连接");
         return doCreate();
     }
 

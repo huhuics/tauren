@@ -13,7 +13,7 @@ import org.apache.commons.dbutils.ResultSetHandler;
 
 /**
  * <p><code>BaseDao</code>被设计用来继承的，子类DAO继承BaseDao后即可使用基本的增、删、改、查方法</p>
- * <p>子类DAO还可以父类的<code>QueryRunner</code>自行扩展数据库操作方法</p>
+ * <p>子类DAO还可以通过父类的<code>QueryRunner</code>自行扩展数据库操作方法</p>
  * @author HuHui
  * @version $Id: BaseDao.java, v 0.1 2017年12月4日 下午3:46:24 HuHui Exp $
  */
