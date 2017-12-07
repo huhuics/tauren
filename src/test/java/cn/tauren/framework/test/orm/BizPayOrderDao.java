@@ -21,12 +21,12 @@ public class BizPayOrderDao extends BaseDao {
     @Transaction
     public int updateWithTran(String sql, Object... params) throws SQLException {
         int cnt = super.update(sql, params);
-        throw new RuntimeException("测试异常");
+        return cnt;
     }
 
     public int updateWithoutTran(String sql, Object... params) throws SQLException {
         int cnt = super.update(sql, params);
-        throw new RuntimeException("测试异常");
+        return cnt;
     }
 
 }

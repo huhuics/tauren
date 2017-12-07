@@ -4,10 +4,13 @@
  */
 package cn.tauren.framework.ioc.impl;
 
+import java.lang.reflect.Method;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import cn.tauren.framework.aop.annotation.Intercept;
 import cn.tauren.framework.aop.api.ProxyInterceptor;
 import cn.tauren.framework.aop.api.ProxyResolver;
 import cn.tauren.framework.ioc.api.BaseResolver;
@@ -48,6 +51,8 @@ public class TransactionAnnoResolver extends BaseResolver {
             return;
         }
 
+        remvoeNoTransClasses(classes);
+
         for (Class<?> clazz : classes) {
 
             Object targetInstance = beanFactory.getBean(clazz);
@@ -65,4 +70,30 @@ public class TransactionAnnoResolver extends BaseResolver {
         }
 
     }
+
+    /**
+     * 移除没有@Transaction注解的类
+     */
+    private void remvoeNoTransClasses(List<Class<?>> classes) {
+        Iterator<Class<?>> iterator = classes.iterator();
+        while (iterator.hasNext()) {
+            Class<?> next = iterator.next();
+            if (!next.isAnnotationPresent(Intercept.class) && !isAnyMethodAnnoPresent(next)) {
+                iterator.remove();
+            }
+        }
+    }
+
+    private boolean isAnyMethodAnnoPresent(Class<?> clazz) {
+        Method[] methods = clazz.getMethods();
+
+        for (Method method : methods) {
+            if (method.isAnnotationPresent(Transaction.class)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

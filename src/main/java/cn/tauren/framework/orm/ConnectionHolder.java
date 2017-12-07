@@ -5,7 +5,11 @@
 package cn.tauren.framework.orm;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
+
+import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
+import cn.tauren.framework.ConfigFileReader;
 
 /**
  * 保存每个线程的数据库连接
@@ -14,36 +18,39 @@ import java.sql.DriverManager;
  */
 public class ConnectionHolder {
 
-    // TODO 硬编码，后续再用连接池代替
-    private static final ThreadLocal<Connection> holder = new ThreadLocal<Connection>() {
+    private static GenericObjectPool<Connection> pool;
 
-                                                            @Override
-                                                            protected Connection initialValue() {
-                                                                String driver = "com.mysql.jdbc.Driver";
+    private static GenericObjectPoolConfig       poolConfig;
 
-                                                                String url = "jdbc:mysql://168.33.131.164:3306/joice";
+    static {
+        poolConfig = new GenericObjectPoolConfig();
+        poolConfig.setMaxTotal(ConfigFileReader.getMaxTotal());
+        poolConfig.setMaxIdle(ConfigFileReader.getMaxIdle());
+        poolConfig.setMinIdle(ConfigFileReader.getMinIdle());
 
-                                                                String user = "root";
-                                                                String password = "huhui";
+        pool = new GenericObjectPool<Connection>(new ConnectionFactory(), poolConfig);
+    }
 
-                                                                Connection conn = null;
-                                                                try {
-                                                                    Class.forName(driver);
-                                                                    conn = DriverManager.getConnection(url, user, password);
-                                                                } catch (Exception e) {
-                                                                    throw new RuntimeException("创建数据库连接异常", e);
-                                                                }
-
-                                                                return conn;
-                                                            }
-
-                                                        };
+    private static final ThreadLocal<Connection> holder = new ThreadLocal<Connection>();
 
     public static Connection get() {
-        return holder.get();
+        Connection conn = holder.get();
+        if (conn == null) {
+            try {
+                conn = pool.borrowObject();
+            } catch (Exception e) {
+                throw new RuntimeException("获取数据库连接失败", e);
+            }
+            holder.set(conn);
+        }
+        return conn;
     }
 
     public static void clear() {
+        Connection conn = holder.get();
+        if (conn != null) {
+            pool.returnObject(conn);
+        }
         holder.remove();
     }
 

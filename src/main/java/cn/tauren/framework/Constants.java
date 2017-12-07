@@ -12,71 +12,71 @@ package cn.tauren.framework;
 public interface Constants {
 
     /** 默认配置文件名 */
-    static final String DEFAULT_CONFIG_NAME    = "tauren.config";
+    static final String DEFAULT_CONFIG_NAME     = "tauren.config";
 
     /************************配置文件字段名称***************************/
     /** 工程扫码包路径字段 */
-    static final String SCAN_PACKAGE_FIELD     = "scan.package";
+    static final String SCAN_PACKAGE_FIELD      = "scan.package";
 
     /** jsp目录字段 */
-    static final String JSP_PATH_FIELD         = "jsp.path";
+    static final String JSP_PATH_FIELD          = "jsp.path";
 
     /** 主页字段 */
-    static final String INDEX_FIELD            = "index";
+    static final String INDEX_FIELD             = "index";
 
     /** 数据库驱动字段 */
-    static final String DB_DRIVER              = "db.driver";
+    static final String DB_DRIVER_FIELD         = "db.driver";
 
     /** 数据库URL字段 */
-    static final String DB_URL                 = "db.url";
+    static final String DB_URL_FIELD            = "db.url";
 
     /** 数据库用户名字段 */
-    static final String DB_USER                = "db.user";
+    static final String DB_USER_FIELD           = "db.user";
 
     /** 数据库密码字段 */
-    static final String DB_PASSWORD            = "db.password";
+    static final String DB_PASSWORD_FIELD       = "db.password";
 
     /** 最大连接数 */
-    static final String DB_MAX_TOTAL           = "db.max.total";
+    static final String DB_MAX_TOTAL_FIELD      = "db.max.total";
 
     /** 最大空闲数 */
-    static final String DB_MAX_IDLE            = "db.max.idle";
+    static final String DB_MAX_IDLE_FIELD       = "db.max.idle";
 
     /** 最小空闲数 */
-    static final String DB_MIN_IDLE            = "db.min.idle";
+    static final String DB_MIN_IDLE_FIELD       = "db.min.idle";
     /********end********/
 
     /************************配置文件字段默认值***************************/
     /** 默认jsp目录值 */
-    static final String DEFAULT_JSP_PATH_VALUE = "/WEB-INF/jsp/";
+    static final String DEFAULT_JSP_PATH_VALUE  = "/WEB-INF/jsp/";
 
     /** 默认主页值 */
-    static final String DEFAULT_INDEX          = "index.jsp";
+    static final String DEFAULT_INDEX_VALUE     = "index.jsp";
 
     /** 默认最大连接数 */
-    static final int    DEFAULT_MAX_TOTAL      = 8;
+    static final int    DEFAULT_MAX_TOTAL_VALUE = 8;
 
     /** 默认最大空闲数 */
-    static final int    DEFAULT_MAX_IDLE       = 8;
+    static final int    DEFAULT_MAX_IDLE_VALUE  = 8;
 
     /** 默认最小空闲数 */
-    static final int    DEFAULT_MIN_IDLE       = 0;
+    static final int    DEFAULT_MIN_IDLE_VALUE  = 0;
     /********end********/
 
     /************************Tauren框架使用常量***************************/
-    static final String FILE_DOT               = ".";
+    static final String FILE_DOT                = ".";
 
     /** 字符编码 */
-    static final String UTF8                   = "UTF-8";
+    static final String UTF8                    = "UTF-8";
 
     /** jsp文件后缀 */
-    static final String SUFFIX_JSP             = ".jsp";
+    static final String SUFFIX_JSP              = ".jsp";
 
     /** 主页 */
-    static final String INDEX                  = ConfigFileReader.getIndex();
+    static final String INDEX                   = ConfigFileReader.getIndex();
 
     /** jsp目录值 */
-    static final String JSP_PATH_VALUE         = ConfigFileReader.getJspPath();
+    static final String JSP_PATH_VALUE          = ConfigFileReader.getJspPath();
     /********end********/
 
 }

@@ -7,9 +7,12 @@ package cn.tauren.framework.orm;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
+
+import cn.tauren.framework.ConfigFileReader;
 
 /**
  * {@link Connection}工厂类
@@ -19,7 +22,8 @@ import org.apache.commons.pool2.impl.DefaultPooledObject;
 public class ConnectionFactory extends BasePooledObjectFactory<Connection> {
 
     @Override
-    public Connection create() throws Exception {
+    public Connection create() {
+        System.out.println("创建数据库连接");
         return doCreate();
     }
 
@@ -29,17 +33,17 @@ public class ConnectionFactory extends BasePooledObjectFactory<Connection> {
     }
 
     @Override
-    public void passivateObject(PooledObject<Connection> p) throws Exception {
-        p.getObject().close();
+    public void destroyObject(PooledObject<Connection> p) throws Exception {
+        Connection conn = p.getObject();
+        DbUtils.close(conn);
     }
 
     private Connection doCreate() {
-        String driver = "com.mysql.jdbc.Driver";
+        String driver = ConfigFileReader.getDbDriver();
+        String url = ConfigFileReader.getDbUrl();
 
-        String url = "jdbc:mysql://168.33.131.164:3306/joice";
-
-        String user = "root";
-        String password = "huhui";
+        String user = ConfigFileReader.getDbUser();
+        String password = ConfigFileReader.getDbPassword();
 
         Connection conn = null;
         try {

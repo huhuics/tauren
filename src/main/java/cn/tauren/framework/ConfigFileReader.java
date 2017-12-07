@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 /**
  * 读取配置文件
  * @author HuHui
@@ -38,11 +40,42 @@ public class ConfigFileReader {
         return prop.getProperty(Constants.JSP_PATH_FIELD, Constants.DEFAULT_JSP_PATH_VALUE);
     }
 
+    /********************************获取数据库相关配置*************************************/
+    public static String getDbDriver() {
+        return prop.getProperty(Constants.DB_DRIVER_FIELD);
+    }
+
+    public static String getDbUrl() {
+        return prop.getProperty(Constants.DB_URL_FIELD);
+    }
+
+    public static String getDbUser() {
+        return prop.getProperty(Constants.DB_USER_FIELD);
+    }
+
+    public static String getDbPassword() {
+        return prop.getProperty(Constants.DB_PASSWORD_FIELD);
+    }
+
+    public static int getMaxTotal() {
+        return NumberUtils.toInt(prop.getProperty(Constants.DB_MAX_TOTAL_FIELD), Constants.DEFAULT_MAX_TOTAL_VALUE);
+    }
+
+    public static int getMaxIdle() {
+        return NumberUtils.toInt(prop.getProperty(Constants.DB_MAX_IDLE_FIELD), Constants.DEFAULT_MAX_IDLE_VALUE);
+    }
+
+    public static int getMinIdle() {
+        return NumberUtils.toInt(prop.getProperty(Constants.DB_MIN_IDLE_FIELD), Constants.DEFAULT_MIN_IDLE_VALUE);
+    }
+
+    /***********end***********/
+
     /**
      * 获取主页
      */
     public static String getIndex() {
-        return prop.getProperty(Constants.INDEX_FIELD, Constants.DEFAULT_INDEX);
+        return prop.getProperty(Constants.INDEX_FIELD, Constants.DEFAULT_INDEX_VALUE);
     }
 
     private static Properties getProperties() {

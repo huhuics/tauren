@@ -8,8 +8,6 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.apache.commons.dbutils.DbUtils;
-
 import cn.tauren.framework.aop.api.ProxyInterceptor;
 
 /**
@@ -42,10 +40,7 @@ public class TransactionInterceptor extends ProxyInterceptor {
         } catch (SQLException e) {
             throw new RuntimeException(method.getName() + "方法事务提交失败", e);
         } finally {
-            try {
-                DbUtils.close(conn);
-            } catch (SQLException e) {
-            }
+            ConnectionHolder.clear();
         }
     }
 
@@ -59,10 +54,7 @@ public class TransactionInterceptor extends ProxyInterceptor {
         } catch (SQLException se) {
             throw new RuntimeException(method.getName() + "方法执行失败且事务回滚失败", se);
         } finally {
-            try {
-                DbUtils.close(conn);
-            } catch (SQLException e1) {
-            }
+            ConnectionHolder.clear();
         }
 
         throw new RuntimeException(method.getName() + "方法执行失败", e);

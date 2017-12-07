@@ -21,7 +21,7 @@ import com.alibaba.fastjson.JSON;
  */
 public class BizPayOrderDaoTest {
 
-    private BizPayOrderDao dao = new BizPayOrderDao(); ;
+    private BizPayOrderDao dao = new BizPayOrderDao();
 
     @Test
     public void testQuery1() throws SQLException {
