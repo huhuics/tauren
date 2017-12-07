@@ -15,10 +15,12 @@
         - [3.2.3 Tauren是如何解决循环依赖？](#323-tauren是如何解决循环依赖)
     - [3.3 AOP(Aspect Oriented Programming)](#33-aopaspect-oriented-programming)
     - [3.4 MVC](#34-mvc)
+    - [3.5 ORM](#35-orm)
 - [四. 使用方式](#四-使用方式)
     - [4.1 IoC使用](#41-ioc使用)
     - [4.2 AOP使用](#42-aop使用)
     - [4.3 MVC使用](#43-mvc使用)
+    - [4.4 ORM使用](#44-orm使用)
    
 
 
@@ -115,6 +117,14 @@ Spring容器将每一个正在创建的Bean标识符放在一个“当前创建B
 
 当客户端请求过来时，通过客户端的请求组成的key去Map中查询对应的Action，如果查到了，就通过反射执行对应Controller的方法，没查到则返回404。
 
+## 3.5 ORM
+*Tauren*框架提供了抽象类`BaseDao`，子类DAO继承`BaseDao`后即可使用基本的增、删、改、查方法。子类DAO还可以自行扩展数据库操作方法。`BaseDao`是通过`ThreadLocal`来获取获取数据库连接，这一点很重要，因为这一设计是实现事务的关键。`BaseDao`对数据库的操作最终是委托给了`apache DBUtil`。
+
+`Tauren`框架利用`apache commons-pool`实现了一个数据库连接池，所有的数据库连接都是从这个连接池中产生。客户端不必关闭连接，连接池会维护关闭操作。
+
+关于事务，Tauren提供了事务注解`@Transaction`，标注于类，表示该类所有方法执行事务操作；标注于类的方法，表示该方法执行事务操作。`Tauren`框架是通过代理类的方式实现事务的，即在IoC过程中，生成类的事务代理类。
+
+
 
 # 四. 使用方式
 ## 4.1 IoC使用
@@ -194,7 +204,38 @@ public class LoginController {
 
 `@RequestMapping`注解有三个值：value表示uri；requestMethod表示http请求方式，默认同时支持GET和POST；responseMethod表示返回类型，可以是页面也可以是JSON字符串。
 
+## 4.4 ORM使用
+在客户端，一个DAO的典型写法是这样的：
+```java
+    @Bean
+    public class BizPayOrderDao extends BaseDao {
 
-*代码持续更新中*
+    @Transaction
+    public int updateOrder(String sql, Object... params) throws SQLException {
+        int cnt = super.update(sql, params);
+        return cnt;
+    }
+```
+
+如果在Service层使用事务，一般是这样：
+```java
+    @Bean
+    public class UserServiceImpl extends UserService {
+
+        @Inject
+        private UserDao userDao;
+
+        @Inject
+        private OrderDao orderDao;
+
+        @Transaction
+        public updateUserInfo(User user){
+            userDao.update(...);
+            orderDao.update(...);
+        }
+    }
+```
+
+
 
 
