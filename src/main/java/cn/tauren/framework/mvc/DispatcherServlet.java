@@ -26,7 +26,7 @@ import cn.tauren.framework.util.WebUtil;
  * @author HuHui
  * @version $Id: DispatcherServlet.java, v 0.1 2017年11月24日 下午2:40:38 HuHui Exp $
  */
-@WebServlet(urlPatterns = "/*", loadOnStartup = 0)
+@WebServlet(urlPatterns = "/", loadOnStartup = 0)
 public class DispatcherServlet extends HttpServlet {
 
     /** uid */

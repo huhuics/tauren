@@ -29,7 +29,7 @@ public class Initializer implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         logger.info("Tauren is init...");
         new DefaultApplicationContext();
-        registeJspServlet(sce.getServletContext());
+        //        registeJspServlet(sce.getServletContext());
         logger.info("Tauren init success!");
     }
 
@@ -41,6 +41,7 @@ public class Initializer implements ServletContextListener {
     /**
      * 添加jsp映射
      */
+    @Deprecated
     private void registeJspServlet(ServletContext context) {
         ServletRegistration jspServlet = context.getServletRegistration("jsp");
         jspServlet.addMapping("/index.jsp");
